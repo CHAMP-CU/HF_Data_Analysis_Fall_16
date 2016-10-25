@@ -1,0 +1,144 @@
+Fall 2016 Question Code	Spring 2016 Code	Question Text	Data type	Data values	Scenario	Location	Aspect	Serial	Volume?	Layout?	Privacy?
+crew_time	crew_test_date_	Timestamp	Free response		crew		time				
+crew_name	crew_id_name_	Your name	Free response		crew		name				
+crew_test	crew_test_number_	Test Number	Count		crew		test				
+crew_id	crew_id_number_	Crew Member ID	Categorical	1;2;3;4	crew		id				
+crew_prior		Have you participated in this test before?	Categorical	Yes;No	crew		prior				
+crew_gender		What is your gender?	Categorical	Male;Female;Other/Decline	crew		gender				
+crew_age	crew_experience_age_	What is your age?	Continuous	years	crew		age				
+crew_national		What is your country of origin?	Free response		crew		national				
+crew_travel		Have you lived outside of the United States longer than one year?	Binary	Yes;No	crew		travel				
+crew_work	crew_experience_profession_	What is your current profession?	Free response		crew		work				
+crew_major	crew_experience_major_	What is or was your college major?	Free response		crew		major				
+crew_flight_01	crew_experience_aircraft_	Do you have experience flying aircraft?	Binary	Yes;No	crew		flight	1			
+crew_flight_02	crew_experience_aircraft_time	How many hours of experience do you have in control of an aircraft?	Continuous	hours	crew		flight	2			
+crew_flight_03	crew_experience_aircraft_cert	Certificates or ratings?	Free response		crew		flight	3			
+crew_space_01	crew_experience_simulator_type	Do you have any experience in spacecraft simulators?	Binary	Yes;No	crew		space	1			
+crew_space_02	crew_experience_simulator_hrs	How many hours?	Continuous	hours	crew		space	2			
+crew_space_03	crew_experience_simulator_type	What kinds of simulators?	Free response		crew		space	3			
+crew_remote		Have you lived in or performed work in remote environments?	Binary	Yes;No	crew		remote				
+crew_remote_c		Please elaborate on your previous answer if "Yes"	Comment		crew		remote				
+crew_space_04		Do you have any experience working in human spacecraft?	Binary	Yes;No	crew		space	4			
+crew_space_05	crew_experience_space_	Do you have experience flying in space?	Binary	Yes;No	crew		space	5			
+crew_space_06	crew_experience_space_nflights	Number of spaceflights	Count		crew		space	6			
+crew_space_07	crew_experience_space_time	Hours in space	Continuous	hours	crew		space	7			
+crew_space_08	crew_experience_longduration_	Long duration?	Binary	Yes;No	crew		space	8			
+crew_height	crew_anthropometry_height_	Height (inches)	Continuous	inches	crew		height				
+crew_shoulder	crew_anthropometry_shoulderwidth_	Bideltoid Breadth (inches)	Continuous	inches	crew		shoulder				
+crew_thumb	crew_anthropometry_thumbtip_	Thump-Tip Reach (inches)	Continuous	inches	crew		thumb				
+morning_slp_overall	morning_sleep_general_	Rate the overall acceptability of the crew sleeping quarters	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	slp	overall				
+morning_slp_overall_c		Comments	Comment		morning	slp	overall				
+morning_slp_spread	morning_sleep_cluster_	Would you rather have crew sleeping quarters clustered together or spread out?	Ordinal	1 - clustered together; 6 - spread out	morning	slp	spread		1	1	
+morning_slp_spread_c		Comments	Comment		morning	slp	spread		1	1	
+morning_slp_privacy	morning_sleep_privacy_	Rate the acceptability of the sleeping quarters in terms of sense of privacy	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	slp	privacy				1
+morning_slp_privacy_c		Comments	Comment		morning	slp	privacy				
+morning_slp_sleep	morning_sleep_sleep_volume	Rate the acceptability of the volume available in the sleeping quarters for sleeping	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	slp	sleep		1		
+morning_slp_sleep_c		Comments	Comment		morning	slp	sleep				
+morning_slp_hygiene	morning_sleep_hygiene_volume	Rate the acceptability of the volume available in the sleeping quarters, for use for personal hygiene.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	slp	hygiene				
+morning_slp_hygiene_c		Comments	Comment		morning	slp	hygiene				
+morning_slp_height	morning_sleep_height_	Rate the acceptability of the height dimension of the sleeping quarters.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	slp	height				
+morning_slp_height_c		Comments	Comment		morning	slp	height				
+morning_slp_width	morning_sleep_width_	Rate the acceptability of the width (entrance door to spacecraft outer shell) of the sleeping quarters.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	slp	width				
+morning_slp_width_c		Comments	Comment		morning	slp	width				
+morning_slp_width	morning_sleep_others_location	Rate the acceptability of your sleeping quarters' location with respect to the locations of the other crew members' sleep stations.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	slp	width				
+morning_slp_width_c		Comments	Comment		morning	slp	width				
+morning_slp_location	morning_sleep_nearby_location	Rate the acceptability of the sleeping quarters' location with respect to the locations of nearby areas.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	slp	location				
+morning_slp_location_c		Comments	Comment		morning	slp	location				
+morning_crg_location	morning_storage_hygiene_	Rate the acceptability of the personal hygiene storage location.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	crg	location				
+morning_gly_table_01	morning_galley_table_room	Rate the acceptability of the room available to eat together at the table.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	gly	table	1			
+morning_gly_table_01_c		Comments	Comment		morning	gly	table	1			
+morning_gly_panel_01	morning_galley_efficiency_	Rate the efficiency of locations of the food warmer and the potable water dispenser.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	gly	panel	1			
+morning_gly_panel_01_c		Comments	Comment		morning	gly	panel	1			
+morning_gly_table_02	morning_galley_table_collapsed	Would you rather have the table collapsed after meals, or have it available as a surface to use for other purposes throughout the day?	Binary	Collapsed;Available	morning	gly	table	2			
+morning_gly_table_02_c		Comments	Comment		morning	gly	table	2			
+morning_crg_food_01	morning_galley_foodstorage_accessibility	Rate the accessibility of the food storage.	Ordinal	1 - completely accessible; 6 - completely inaccessible	morning	crg	food	1			
+morning_crg_food_01_c		Comments	Comment		morning	crg	food	1			
+morning_gly_rehyd	morning_table_location_	Rate the acceptability of the locations of the following [Rehydration System]	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	gly	rehyd				
+morning_gly_table_03	morning_galley_oven_location	Rate the acceptability of the locations of the following [Table]	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	gly	table	3			
+morning_gly_oven	morning_galley_foodstorage_location	Rate the acceptability of the locations of the following [Oven]	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	gly	oven				
+morning_gly_waste	morning_wastebag_location_	Rate the acceptability of the locations of the following [Waste Bag]	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	gly	waste				
+morning_crg_food_02	morning_galley_rehydration_location	Rate the acceptability of the locations of the following [Food Storage]	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	crg	food	2			
+morning_crg_c	morning_general_location_	Comments	Comment		morning	crg					
+morning_cmd_layout	morning_general_location_	Rate the acceptability of the command center layout	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	cmd	layout				
+morning_cmd_layout_c		Comments	Comment		morning	cmd	layout				
+morning_cmd_panel	morning_command_layout_	Rate the acceptability of the command center control panel.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	cmd	panel				
+morning_cmd_panel_c		Comments	Comment		morning	cmd	panel				
+morning_cmd_personal	morning_command_personal_	Rate the acceptability of the command center location in the habitat for personal communication (e.g. a phone call or Skype) with friends and family.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	cmd	personal				
+morning_cmd_personal_c		Comments	Comment		morning	cmd	personal				
+morning_cmd_personal_02	morning_command_skype_	For personal communications (e.g. a phone call or Skype) with friends and family, would you prefer to talk/video conference in private or the communal space?	Ordinal	1 - completely unacceptable; 6 - completely acceptable	morning	cmd	personal	2			
+morning_cmd_personal_02_c		Comments	Comment		morning	cmd	personal	2			
+emergency_emr_path		Rate the acceptability of the emergency egress path.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	emergency	emr	path				
+emergency_emr_path_c		Please explain your previous answer.	Comment		emergency	emr	path				
+emergency_emr_train		With training, could the 4-person crew successfully and safely egress to the Orion capsule in one minute?	Binary	Yes;No	emergency	emr	train				
+emergency_emr_train_c		Please explain your previous answer.	Comment		emergency	emr	train				
+work_crg_presence		To what degree did the presence of other crew members affect your cargo transfer?	Ordinal	1 - not at all; 6 - a great deal	work	crg	presence				
+work_crg_presence_c		Comments	Comment		work	crg	presence				
+work_crg_trips		How many trips did you take to complete your task?	Count		work	crg	trips				
+work_crg_trips_c		Comments	Comment		work	crg	trips				
+work_crg_personal		Rate the acceptability of the location of the personal storage.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	work	crg	personal				
+work_crg_tools		Rate the acceptability of the location of the tool storage for accessibility and location proximity to work areas.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	work	crg	tools				
+work_crg_tools_c		Comments	Comment		work	crg	tools				
+work_sci_location_01		Rate the acceptability of the location of the science control panel for usability and location proximity to work areas.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	work	sci	location	1			
+work_sci_location_01_c		Comments	Comment		work	sci	location	1			
+work_sci_area		Rate the acceptability of the workspace at the workstation for usability and adequacy of surface area.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	work	sci	area				
+work_sci_area_c		Comments	Comment		work	sci	area				
+work_sci_location_02		Rate the acceptability of the location of the science station for accessibility and usability.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	work	sci	location	2			
+work_sci_location_02_c		Comments	Comment		work	sci	location	2			
+work_sci_presence		To what degree did the presence of other crew members affect your science work?	Ordinal	1 - not at all; 6 - a great deal	work	sci	presence				
+work_sci_presence_c		Comments	Comment		work	sci	presence				
+work_exr_treadmill_01		Rate the acceptability for amount of space used for the treadmill.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	work	exr	treadmill	1			
+work_exr_treadmill_02		Rate the acceptability of the location of the treadmill for accessibility.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	work	exr	treadmill	2			
+work_exr_resistive_01		Rate the acceptability for the amount of space used for the resistive exercise equipment.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	work	exr	resistive	1			
+work_exr_resistive_02		Rate the acceptability of the location of the resistive exercise equipment for accessibility and unobtrusiveness.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	work	exr	resistive	2			
+work_hyg_volume		Rate the acceptability of the amount of volume used for personal hygiene in the node.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	work	hyg	volume				
+work_hyg_location		Rate the acceptability of the location of the personal hygiene space for convenience, accessibility and privacy.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	work	hyg	location				
+work_hyg_privacy		Rate the acceptability of the location of the personal hygiene space for privacy.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	work	hyg	privacy				
+work_co2_location_01		Rate the acceptability of the LiOH canister storage location for accessibility and proximity to CO2 removal system.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	work	co2	location	1			
+work_co2_location_01_c		Comments	Comment	1 - completely unacceptable; 6 - completely acceptable	work	co2	location	1			
+work_co2_location_02		Rate the accessibility of the CO2 removal system.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	work	co2	location	2			
+work_co2_location_02_c		Comments	Comment		work	co2	location	2			
+work_co2_location_03		Rate the accessibility of the spent LiOH canisters inside the CO2 removal system.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	work	co2	location	3			
+work_co2_location_03_c		Comments	Comment		work	co2	location	3			
+work_co2_presence		To what degree did the presence of other crew members affect your maintenance work?	Ordinal	1 - completely unacceptable; 6 - completely acceptable	work	co2	presence				
+work_co2_presence_c		Comments	Comment		work	co2	presence				
+work_co2_location_04		Rate the acceptability of the location of the CO2 removal system.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	work	co2	location	4			
+work_co2_location_04_c		Comments	Comment		work	co2	location	4			
+eva_alk_location		Rate the acceptability of the location of the EVA suits.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	eva	alk	location				
+eva_alk_location_c		Comments	Comment		eva	alk	location				
+eva_alk_removal_01		In the Node item removal process, rate the acceptability of the physical and mental effort.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	eva	alk	removal	1			
+eva_alk_c		Comments	Comment		eva	alk					
+eva_alk_removal		Rate the acceptability of the Node item removal process.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	eva	alk	removal				
+eva_alk_c		Comments	Comment		eva	alk					
+eva_alk_ev_01		Rate the acceptability of the location of the EVA panel.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	eva	alk	ev	1			
+eva_alk_c		Comments	Comment		eva	alk					
+eva_alk_ev_02		Rate the acceptability of having 2 IV helpers per 2 EVA crew members.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	eva	alk	ev	2			
+eva_alk_c		Comments	Comment		eva	alk					
+eva_alk_ev_03		How many total IV helpers would be ideal per EVA crew member?	Count		eva	alk	ev	3			
+eva_alk_c		Comments	Comment		eva	alk					
+eva_alk_ev_04		Rate the acceptability of the amount of volume available for 2 crew members to don (put on) the EVA suits.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	eva	alk	ev	4			
+eva_alk_c		Comments	Comment		eva	alk					
+eva_alk_ev_05		Rate the acceptability of the amount of volume available for 2 crew members to doff (take off) the EVA suit.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	eva	alk	ev	5			
+eva_alk_c		Comments	Comment		eva	alk					
+eva_alk_iv_01		Rate the acceptability of having 2 IV helpers per 2 EVA crew members.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	eva	alk	iv	1			
+eva_alk_iv_01_c		Comments	Comment		eva	alk	iv	1			
+eva_alk_iv_02		How many total IV helpers would be ideal per EVA crew member?	Ordinal	1 - completely unacceptable; 6 - completely acceptable	eva	alk	iv	2			
+eva_alk_iv_02_c		Comments	Comment		eva	alk	iv	2			
+eva_alk_iv_03		Rate the acceptability of the amount of volume available to help don (put on) the EVA suit.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	eva	alk	iv	3			
+eva_alk_iv_03_c		Comments	Comment		eva	alk	iv	3			
+eva_alk_iv_04		Rate the acceptability of the amount of volume available to help doff (take on) the EVA suit.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	eva	alk	iv	4			
+eva_alk_iv_04_c		Comments	Comment		eva	alk	iv	4			
+eva_alk_iv_05		Rate the accessibility of the EVA suit.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	eva	alk	iv	5			
+eva_alk_iv_05_c		Comments	Comment		eva	alk	iv	5			
+eva_alk_iv_06		Rate the accessibility of the EVA tools.	Ordinal	1 - completely unacceptable; 6 - completely acceptable	eva	alk	iv	6			
+eva_alk_iv_06_c		Comments	Comment		eva	alk	iv	6			
+review_alk_volume		Rate the overall volume of each space in the habitat [Airlock]	Categorical	Too Small;Adequate;Too Large	review	alk	volume				
+review_gly_volume		Rate the overall volume of each space in the habitat [Galley]	Categorical	Too Small;Adequate;Too Large	review	gly	volume				
+review_slp_volume		Rate the overall volume of each space in the habitat [Sleep Stations]	Categorical	Too Small;Adequate;Too Large	review	slp	volume				
+review_crg_volume		Rate the overall volume of each space in the habitat [Storage]	Categorical	Too Small;Adequate;Too Large	review	crg	volume				
+review_cmd_volume		Rate the overall volume of each space in the habitat [Command]	Categorical	Too Small;Adequate;Too Large	review	cmd	volume				
+review_sci_volume		Rate the overall volume of each space in the habitat [Science]	Categorical	Too Small;Adequate;Too Large	review	sci	volume				
+review_co2_volume		Rate the overall volume of each space in the habitat [ECLSS]	Categorical	Too Small;Adequate;Too Large	review	co2	volume				
+review_emr_volume		Rate the overall volume of each space in the habitat [Emergency Path]	Categorical	Too Small;Adequate;Too Large	review	emr	volume				
+review_ich_volume_c		Comments	Comment		review	ich	volume				
+review_ich_layout		Identify parts of the habitat where you would change the layout	Multiple selection	Airlock;Galley;Sleep Stations;Sleep Stations;Storage;Command;Science;ECLSS;Emergency Path	review	ich	layout				
+review_ich_layout_c		Comments	Comment		review	ich	layout				
