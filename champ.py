@@ -9,8 +9,8 @@ from scipy import stats
 import re
 
 #Dictionary data frame
-dic = np.genfromtxt("Data Dictionary.tsv",
-					skip_header=1, names=True, dtype=np.object, delimiter='\t')
+dic = np.genfromtxt("Data Dictionary - Fall 2016.tsv",
+					skip_header=0, names=True, dtype=np.object, delimiter='\t')
 
 dic['Type_of_Data']
 locs = np.unique(dic['Location'])
