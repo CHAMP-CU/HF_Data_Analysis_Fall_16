@@ -7,33 +7,41 @@ import json
 from textwrap import wrap
 from scipy import stats
 import re
+import sys
 
 #Dictionary data frame
-dic = np.genfromtxt("Data Dictionary - Fall 2016.tsv",
+dic = np.genfromtxt("Data Dictionary - Fall 2016 - TEST.tsv",
 					skip_header=0, names=True, dtype=np.object, delimiter='\t')
 
-dic['Type_of_Data']
+# dic['Data_type']
 locs = np.unique(dic['Location'])
-datatype = np.zeros(len(dic['Type_of_Data']), np.object)
+datatype = np.zeros(len(dic['Data_type']), np.object)
+
 for i in range(len(datatype)):
-	if dic['Type_of_Data'][i] == 'Binary':
+	if dic['Data_type'][i] == 'Binary':
 		datatype[i] = np.object
-	elif dic['Type_of_Data'][i] == 'Categorical':
+	elif dic['Data_type'][i] == 'Categorical':
 		datatype[i] = np.object
-	elif dic['Type_of_Data'][i] == 'Continuous':
+	elif dic['Data_type'][i] == 'Continuous':
 		datatype[i] = np.float
-	elif dic['Type_of_Data'][i] == 'Count':
+	elif dic['Data_type'][i] == 'Count':
 		datatype[i] = int
-	elif dic['Type_of_Data'][i] == 'Date':
+	elif dic['Data_type'][i] == 'Date':
 		datatype[i] = np.object
-	elif dic['Type_of_Data'][i] == 'Free-response':
+	elif dic['Data_type'][i] == 'Free_response':
 		datatype[i] = np.object
-	elif dic['Type_of_Data'][i] == 'Nominal':
+	elif dic['Data_type'][i] == 'Comment':
 		datatype[i] = np.object
-	elif dic['Type_of_Data'][i] == 'Ordinal':
+	elif dic['Data_type'][i] == 'Nominal':
+		datatype[i] = np.object
+	elif dic['Data_type'][i] == 'Multiple_selection':
+		datatype[i] = np.object
+	elif dic['Data_type'][i] == 'Ordinal':
 		datatype[i] = int
 	else:
 		datatype[i] = np.object
+
+sys.exit()
 
 #"data" data frame
 data = np.genfromtxt("Questionnaire Data - Data.tsv",
@@ -48,7 +56,7 @@ rf = DataFrame(responses)
 
 #Plot binary responses
 
-binary = (dic['Type_of_Data']=='Categorical')+(dic['Type_of_Data']=='Binary')
+binary = (dic['Data_type']=='Categorical')+(dic['Data_type']=='Binary')
 
 plt.figure(figsize=(8, 8))
 #Crew Experience
@@ -148,7 +156,7 @@ H = np.matrix([]).T
 
 with plt.style.context('fivethirtyeight'):
 	plt.figure()
-	df[df > 0].ix[:, dic['Type_of_Data']=="Ordinal"].plot(kind='box', vert=False, patch_artist=True)
+	df[df > 0].ix[:, dic['Data_type']=="Ordinal"].plot(kind='box', vert=False, patch_artist=True)
 	plt.tick_params(axis='y', which='both', labelleft='off', labelright='on')
 	plt.subplots_adjust(right=0.7)
 	plt.yticks(size='xx-small', va='bottom')
@@ -335,12 +343,12 @@ plt.savefig("hist_percentiles")
 
 colors = plt.cm.RdBu(np.linspace(0.25, 0.75, 6))
 
-df[df > 0].ix[:, (dic['Type_of_Data']=="Ordinal")*(dic['Privacy']=='1')].hist(histtype='barstacked',
+df[df > 0].ix[:, (dic['Data_type']=="Ordinal")*(dic['Privacy']=='1')].hist(histtype='barstacked',
 			bins=np.arange(1, 8), align='left', grid=False, normed=True, figsize=(12, 12))
 plt.suptitle("Privacy")
 plt.savefig("figs/ordinal_bar_privacy")
 
-subframe = df[df > 0].ix[:, (dic['Type_of_Data']=="Ordinal")*(dic['Privacy']=='1')]
+subframe = df[df > 0].ix[:, (dic['Data_type']=="Ordinal")*(dic['Privacy']=='1')]
 plt.figure()
 for j in range(subframe.shape[1]):
 	width = np.zeros(6)
@@ -358,7 +366,7 @@ for j in range(subframe.shape[1]):
 	plt.yticks([])
 	plt.axis('tight')
 	plt.axis('off')
-	plt.title("\n".join(wrap(dic['Question'][(dic['Type_of_Data']=="Ordinal")*(dic['Privacy']=='1')][j], 88)), size='x-small')
+	plt.title("\n".join(wrap(dic['Question'][(dic['Data_type']=="Ordinal")*(dic['Privacy']=='1')][j], 88)), size='x-small')
 
 	plt.subplots_adjust(hspace=1)
 plt.suptitle('Privacy', size='large')
@@ -376,7 +384,7 @@ plt.close()
 
 colors = plt.cm.RdBu(np.linspace(0.25, 0.75, 6))
 for i in range(1, 14):
-	mask = ((dic['Type_of_Data']=="Ordinal")+(dic['Type_of_Data']=="Categorical")+(dic['Type_of_Data']=="Binary"))*(dic['Location']==locs[i])
+	mask = ((dic['Data_type']=="Ordinal")+(dic['Data_type']=="Categorical")+(dic['Data_type']=="Binary"))*(dic['Location']==locs[i])
 	subframe = df[df > 0].ix[:, mask]
 
 	plt.figure(figsize=(8, 1.2*subframe.shape[1]+1))
@@ -389,8 +397,8 @@ for i in range(1, 14):
 		plt.axis('equal')
 		plt.axis('off')
 	for j in range(subframe.shape[1]):
-		nlines = len(dic['Type_of_Data'][mask][j])/72.
-		if dic['Type_of_Data'][mask][j]=="Ordinal":
+		nlines = len(dic['Data_type'][mask][j])/72.
+		if dic['Data_type'][mask][j]=="Ordinal":
 			ticks = re.split('1 - | 6 - ', dic['Value'][mask][j])
 			width = np.zeros(6)
 			plt.subplot(subframe.shape[1]+1, 1, j+1)
@@ -415,7 +423,7 @@ for i in range(1, 14):
 			plt.axis('off')
 		#plt.suptitle(locs[i], size='large')
 		#plt.axes([0.25, 0.03, 0.5, 0.05])
-		elif dic['Type_of_Data'][mask][j]=="Binary":
+		elif dic['Data_type'][mask][j]=="Binary":
 			ticks = ['yes', 'no']
 			width = np.zeros(2)
 			plt.subplot(subframe.shape[1]+1, 1, j+1)
@@ -435,7 +443,7 @@ for i in range(1, 14):
 			plt.yticks([])
 			plt.axis('tight')
 			plt.axis('off')
-		elif dic['Type_of_Data'][mask][j]=="Categorical":
+		elif dic['Data_type'][mask][j]=="Categorical":
 			ticks = re.split(' ', dic['Value'][mask][j])[1::2]
 			width = np.zeros(2)
 			plt.subplot(subframe.shape[1]+1, 1, j+1)
@@ -468,7 +476,7 @@ for i in range(1, 14):
 
 
 for i in range(1, 14):
-	subframe = df[df > 0].ix[:, (dic['Type_of_Data']=="Ordinal")*(dic['Location']==locs[i])]
+	subframe = df[df > 0].ix[:, (dic['Data_type']=="Ordinal")*(dic['Location']==locs[i])]
 	subframe.hist(histtype='bar', bins=np.arange(1, 8), normed=True, align='left', grid=False, figsize=(12, 12))
 	plt.suptitle('%s' % (locs[i]), size='large')
 	plt.savefig("figs/ordinal_hist_"+locs[i])
@@ -530,12 +538,12 @@ masks  = [np.ones(len(df), bool), male2, -male2*(np.ones(len(df), bool) < len(ma
 			df[df >0].crew_id_number_=='2',
 			df[df >0].crew_id_number_=='3',
 			df[df >0].crew_id_number_=='4']
-mask = (dic['Type_of_Data']=="Ordinal")+(dic['Type_of_Data']=="Categorical")+(dic['Type_of_Data']=="Binary")+(dic['Type_of_Data']=="Count")
+mask = (dic['Data_type']=="Ordinal")+(dic['Data_type']=="Categorical")+(dic['Data_type']=="Binary")+(dic['Data_type']=="Count")
 subframe = df[df > 0].ix[:, mask]
 for i in range(len(subframe.T)):
 	print dic['Location'][mask][i]
 	print dic['Question'][mask][i]
-	if dic['Type_of_Data'][mask][i] == 'Ordinal':
+	if dic['Data_type'][mask][i] == 'Ordinal':
 		print "Category\t\tn\tMean\t1\t2\t3\t4\t5\t6\t(4-6)\tp-value"
 		for j in range(len(categories)):
 			width = np.zeros(6)
@@ -545,7 +553,7 @@ for i in range(len(subframe.T)):
 			pval = stats.ranksums(subframe.ix[:, i].ix[masks[j]].dropna(), subframe.ix[:, i].ix[-masks[j]].dropna())[1]
 			print '%21s\t%i' % (categories[j], total) + '\t%2.1f' % (subframe.ix[:, i].ix[masks[j]]).mean() + '\t%3.1f%%'*6 % tuple(width*100)+'\t%3.1f%%' % (width[3:].sum()*100) +'\t%3.2f' % (pval)+'*'*(pval < 0.05)
 		print
-	elif dic['Type_of_Data'][mask][i] == 'Binary':
+	elif dic['Data_type'][mask][i] == 'Binary':
 		print "Category\t\t n\tyes\t no\tp-value"
 		for j in range(len(categories)):
 			yes = subframe.ix[:, i].ix[masks[j]].str.contains('y').sum()
@@ -558,7 +566,7 @@ for i in range(len(subframe.T)):
 				pval = np.nan
 			print '%21s\t%i' % (categories[j], total) + '\t%3.1f%%'*2 % (yes*1./total*100, no*1./total*100)+'\t%3.2f' % (pval)+'*'*(pval < 0.05)
 		print
-	elif (dic['Type_of_Data'][mask][i] == 'Categorical') *(i>2):
+	elif (dic['Data_type'][mask][i] == 'Categorical') *(i>2):
 
 		responsetypes = dic['Value'][mask][i].split()[1::2]
 		print "Category\t\t n\t"+ responsetypes[0]+"\t"+responsetypes[1]+"\t no\tp-value"
@@ -573,7 +581,7 @@ for i in range(len(subframe.T)):
 				pval = np.nan
 			print '%21s\t%i' % (categories[j], total) + '\t%3.1f%%'*2 % (suc*1./total*100, fail*1./total*100)+'\t%3.2f' % (pval)+'*'*(pval < 0.05)
 		print
-	elif (dic['Type_of_Data'][mask][i] == 'Count')*(i > 5):
+	elif (dic['Data_type'][mask][i] == 'Count')*(i > 5):
 
 		responsetypes = np.unique(subframe.ix[:, i].dropna())
 		print "Category\t\tn\t"+"Mean"+ "\t%s"*len(responsetypes) % tuple(responsetypes)+ "\tp-value"
@@ -600,11 +608,11 @@ rating = np.zeros(13)
 plt.figure(figsize=(16, 9))
 for i in range(1, 14):
     plt.subplot(4, 4, i)
-    df[df > 0].ix[:, (dic['Type_of_Data']=="Ordinal")*(dic['Location']==locs[i])].mean(0).plot(kind='barh', lw=0)
-    polarity[i-1] = df[df > 0].ix[:, (dic['Type_of_Data']=="Ordinal")*(dic['Location']==locs[i])].mean(0)[df[df > 0].ix[:, (dic['Type_of_Data']=="Ordinal")*(dic['Location']==locs[i])].mean(0) > 4].mean()
-    rating_volume[i-1] = (df[df > 0].ix[:, (dic['Type_of_Data']=="Ordinal")*(dic['Location']==locs[i])*(dic['Reverse']=='0')*(dic['Volume']=='1')] <6).mean().mean()
-    rating_layout[i-1] = (df[df > 0].ix[:, (dic['Type_of_Data']=="Ordinal")*(dic['Location']==locs[i])*(dic['Reverse']=='0')*(dic['Layout']=='1')] <6).mean().mean()
-    rating[i-1] = df[df > 0].ix[:, (dic['Type_of_Data']=="Ordinal")*(dic['Location']==locs[i])*(dic['Reverse']=='0')].mean().mean()
+    df[df > 0].ix[:, (dic['Data_type']=="Ordinal")*(dic['Location']==locs[i])].mean(0).plot(kind='barh', lw=0)
+    polarity[i-1] = df[df > 0].ix[:, (dic['Data_type']=="Ordinal")*(dic['Location']==locs[i])].mean(0)[df[df > 0].ix[:, (dic['Data_type']=="Ordinal")*(dic['Location']==locs[i])].mean(0) > 4].mean()
+    rating_volume[i-1] = (df[df > 0].ix[:, (dic['Data_type']=="Ordinal")*(dic['Location']==locs[i])*(dic['Reverse']=='0')*(dic['Volume']=='1')] <6).mean().mean()
+    rating_layout[i-1] = (df[df > 0].ix[:, (dic['Data_type']=="Ordinal")*(dic['Location']==locs[i])*(dic['Reverse']=='0')*(dic['Layout']=='1')] <6).mean().mean()
+    rating[i-1] = df[df > 0].ix[:, (dic['Data_type']=="Ordinal")*(dic['Location']==locs[i])*(dic['Reverse']=='0')].mean().mean()
     response_rate[i-1] =((rf !='-999')*(rf !='-888')*(rf !='')).ix[:, dic['Location']==locs[i]].mean().mean()
 
     plt.title(locs[i])
@@ -638,7 +646,7 @@ def spatial(data, mask, cmap=plt.cm.Oranges, vmin=None, vmax=None, title='', lab
 	for i in range(len(rects)):
 		total = (mask*(dic['Location']==abbr[i])).sum()
 		#rating[i] = (7-data.ix[:, mask*(dic['Location']==abbr[i])*(dic['Reverse']=='1')]).mean().sum()/total
-		'''if (dic['Type_of_Data']=="Ordinal").all():
+		'''if (dic['Data_type']=="Ordinal").all():
 			npos = (mask*(dic['Location']==abbr[i])*(dic['Reverse']=='0')).sum()
 			nneg = (mask*(dic['Location']==abbr[i])*(dic['Reverse']=='1')).sum()
 			pos = data.ix[:, mask*(dic['Location']==abbr[i])*(dic['Reverse']=='0')].mean().mean()*npos
@@ -670,21 +678,21 @@ def spatial(data, mask, cmap=plt.cm.Oranges, vmin=None, vmax=None, title='', lab
 	cbar.set_xlabel(label)
 	return abbr, rating
 
-mask = (dic['Type_of_Data']=="Ordinal")*(dic['Volume']=='1')*(dic['Preference']=='0')
+mask = (dic['Data_type']=="Ordinal")*(dic['Volume']=='1')*(dic['Preference']=='0')
 input = 100-100*((df[df >0] > 3)*(dic['Reverse']=='1')+(df[df >0] < 4)*(dic['Reverse']=='0'))
 spatial(input, mask, vmin=70, vmax=100, label="%", title='Ratings 4 or higher  (volume)',
 		cmap=plt.cm.Blues)
 plt.savefig("figs/ordinal_map_volume")
 
-mask = (dic['Type_of_Data']=="Ordinal")*(dic['Layout']=='1')*(dic['Preference']=='0')
+mask = (dic['Data_type']=="Ordinal")*(dic['Layout']=='1')*(dic['Preference']=='0')
 spatial(input, mask, vmin=70, vmax=100, cmap=plt.cm.Blues, label="%", title='Ratings 4 or higher (layout)')
 plt.savefig("figs/ordinal_map_layout")
 
-mask = (dic['Type_of_Data']=="Ordinal")*(dic['Preference']=='0')
+mask = (dic['Data_type']=="Ordinal")*(dic['Preference']=='0')
 spatial(input, mask, vmin=70, vmax=100, cmap=plt.cm.Blues, label="%", title='Ratings 4 or higher')
 plt.savefig("figs/ordinal_map_both")
 
-mask = (dic['Type_of_Data']=="Ordinal")*(dic['Preference']=='0')
+mask = (dic['Data_type']=="Ordinal")*(dic['Preference']=='0')
 df2 = DataFrame(df[df >0], copy=True)
 for i in range(67):
 	for j in np.where(dic['Reverse']=='1')[0]:
@@ -713,14 +721,14 @@ longlocs = ['', 'Entire Mock-up', 'Command Station', 'ECLSS', "Storage",  'Emerg
 print "Loc. t   v   l"
 headers = ['Total', 'Volume', 'Layout']
 for i in range(1, len(locs)):
-    print locs[i], '%2.1f '*3 % (df2.ix[:, (locs[i]==dic['Location'])*(dic['Type_of_Data']=="Ordinal")*(dic['Preference']=='0')].mean().mean(),
-    	df2.ix[:, (locs[i]==dic['Location'])*(dic['Type_of_Data']=="Ordinal")*(dic['Preference']=='0')*(dic['Volume']=='1')].mean().mean(),
-    	df2.ix[:, (locs[i]==dic['Location'])*(dic['Type_of_Data']=="Ordinal")*(dic['Preference']=='0')*(dic['Layout']=='1')].mean().mean())
+    print locs[i], '%2.1f '*3 % (df2.ix[:, (locs[i]==dic['Location'])*(dic['Data_type']=="Ordinal")*(dic['Preference']=='0')].mean().mean(),
+    	df2.ix[:, (locs[i]==dic['Location'])*(dic['Data_type']=="Ordinal")*(dic['Preference']=='0')*(dic['Volume']=='1')].mean().mean(),
+    	df2.ix[:, (locs[i]==dic['Location'])*(dic['Data_type']=="Ordinal")*(dic['Preference']=='0')*(dic['Layout']=='1')].mean().mean())
 for i in range(1, len(locs)):
 	for j in range(3):
 		mask2 = [np.ones(len(dic['Volume']), bool), (dic['Volume']=='1'), (dic['Layout']=='1')]
 		overall.set_value(headers[j], longlocs[i],
-			df2.ix[:, (locs[i]==dic['Location'])*(dic['Type_of_Data']=="Ordinal")*(dic['Preference']=='0')*mask2[j]].mean().mean())
+			df2.ix[:, (locs[i]==dic['Location'])*(dic['Data_type']=="Ordinal")*(dic['Preference']=='0')*mask2[j]].mean().mean())
 with plt.style.context('fivethirtyeight'):
 	overall.T.sort_index(by='Total').Total.plot(kind='barh', legend=False, xlim=(1, 6))
 	plt.tight_layout()
