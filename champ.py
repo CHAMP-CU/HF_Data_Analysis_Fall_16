@@ -10,13 +10,19 @@ import re
 import sys
 
 #Dictionary data frame
+# Load the data dictionary
 dic = np.genfromtxt("Data Dictionary - Fall 2016 - TEST.tsv",
 					skip_header=0, names=True, dtype=np.object, delimiter='\t')
 
 # dic['Data_type']
+# Save the locations of the different questions for easy access
 locs = np.unique(dic['Location'])
+
+# Make the datatype array
 datatype = np.zeros(len(dic['Data_type']), np.object)
 
+# Loop through all the different types of data, and change the data type into
+# the correct type. Everything was originally saved as an object.
 for i in range(len(datatype)):
 	if dic['Data_type'][i] == 'Binary':
 		datatype[i] = np.object
@@ -41,19 +47,23 @@ for i in range(len(datatype)):
 	else:
 		datatype[i] = np.object
 
-sys.exit()
-
 #"data" data frame
-data = np.genfromtxt("Questionnaire Data - Data.tsv",
-					skip_header=1, names=True, delimiter='\t',  dtype=tuple(datatype),
-					missing_values=(-999, -888, '-999', '-888'), skip_footer=1)
+#data = np.genfromtxt("CHAMP Test Questionnaire (Responses) - Form Responses 1.tsv",
+#					skip_header=0, names=True, delimiter='\t',  dtype=tuple(datatype),
+#					missing_values=(-999, -888, '-999', '-888'), skip_footer=1)
+
+# Load in the test data responses 
+data = np.genfromtxt("CHAMP Test Questionnaire (Responses) - Form Responses 1.tsv",
+					skip_header=0, names=True, delimiter='\t',
+					missing_values=(-999, '-999'), dtype=tuple(datatype))
 
 #"free responses" data frame
-df = DataFrame(data)
-responses = np.genfromtxt("Questionnaire Data - Free responses.tsv",
-					skip_header=1, names=True, dtype=np.object, delimiter='\t')
-rf = DataFrame(responses)
+#df = DataFrame(data)
+#responses = np.genfromtxt("Questionnaire Data - Free responses.tsv",
+#					skip_header=1, names=True, dtype=np.object, delimiter='\t')
+#rf = DataFrame(responses)
 
+sys.exit()
 #Plot binary responses
 
 binary = (dic['Data_type']=='Categorical')+(dic['Data_type']=='Binary')
