@@ -11,7 +11,7 @@ import sys
 
 #Dictionary data frame
 # Load the data dictionary
-dic = np.genfromtxt("Data Dictionary - Fall 2016 - TEST.tsv",
+dic = np.genfromtxt("Data Dictionary - Fall 2016.tsv",
 					skip_header=0, names=True, dtype=np.object, delimiter='\t')
 
 # dic['Data_type']
@@ -52,11 +52,23 @@ for i in range(len(datatype)):
 #					skip_header=0, names=True, delimiter='\t',  dtype=tuple(datatype),
 #					missing_values=(-999, -888, '-999', '-888'), skip_footer=1)
 
-# Load in the test data responses 
+data = np.genfromtxt("test_array.csv",delimiter=',',
+					missing_values="", filling_values='-999')
+sys.exit()
+
+# Load in the test data responses
+data = np.genfromtxt("CHAMP Test Questionnaire (Responses) - Form Responses 1 TEST.csv",
+					skip_header=1, names=0, delimiter=',',
+					dtype=np.object)
+sys.exit()
+
+# Load in the test data responses
 data = np.genfromtxt("CHAMP Test Questionnaire (Responses) - Form Responses 1.tsv",
 					skip_header=0, names=True, delimiter='\t',
-					missing_values=(-999, '-999'), dtype=tuple(datatype))
+					missing_values={0:""}, filling_values={0:-999},
+					dtype=np.object)
 
+### This part was removed because we don't have a seperate free response form
 #"free responses" data frame
 #df = DataFrame(data)
 #responses = np.genfromtxt("Questionnaire Data - Free responses.tsv",
