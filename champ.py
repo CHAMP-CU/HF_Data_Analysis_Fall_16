@@ -65,7 +65,7 @@ responses_file = "..\HF_data_fall2016.txt"
 # Load in the test data responses
 data = np.genfromtxt(responses_file, delimiter='\t',
 					dtype=np.object,
-					skip_header=1, names=True)
+					skip_header=0, names=True)
 sys.exit()
 
 ### This part was removed because we don't have a seperate free response form
