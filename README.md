@@ -11,3 +11,6 @@ Procedure in order to generate the data needed for the script from the google fo
 2) Open MATLAB
 3) Using the function, "make_tsv_file.m", generate the tsv file from the excel file
 4) Execute champ.py
+
+*** Make sure that the testing data isn't on the public repository, download the
+file from the google drive.

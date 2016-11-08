@@ -66,7 +66,7 @@ responses_file = "..\HF_data_fall2016.txt"
 data = np.genfromtxt(responses_file, delimiter='\t',
 					dtype=np.object,
 					skip_header=0, names=True)
-sys.exit()
+df = DataFrame(data)
 
 ### This part was removed because we don't have a seperate free response form
 #"free responses" data frame
