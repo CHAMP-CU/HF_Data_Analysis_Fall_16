@@ -47,19 +47,22 @@ for i in range(len(datatype)):
 	else:
 		datatype[i] = np.object
 
+### OLD DATA READIN
 #"data" data frame
 #data = np.genfromtxt("CHAMP Test Questionnaire (Responses) - Form Responses 1.tsv",
 #					skip_header=0, names=True, delimiter='\t',  dtype=tuple(datatype),
 #					missing_values=(-999, -888, '-999', '-888'), skip_footer=1)
 
-data = np.genfromtxt("test_array.csv",delimiter=',',
-					missing_values="", filling_values='-999')
-sys.exit()
-
-# Load in the test data responses
-data = np.genfromtxt("CHAMP Test Questionnaire (Responses) - Form Responses 1 TEST.csv",
-					skip_header=1, names=0, delimiter=',',
+test_data =np.genfromtxt("test_array.csv", delimiter=',',
+					skip_header=False, names=True,
+					missing_values={0:'NaN'}, filling_values={0:'replaced'},
 					dtype=np.object)
+sys.exit()
+# Load in the test data responses
+data = np.genfromtxt("HF_data_fall2016.txt", delimiter='\t',
+					skip_header=True, names=False)
+#					missing_values={'NaN'}, filling_values={'-999'},
+#					dtype=np.object)
 sys.exit()
 
 # Load in the test data responses
