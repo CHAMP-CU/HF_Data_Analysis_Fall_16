@@ -53,23 +53,20 @@ for i in range(len(datatype)):
 #					skip_header=0, names=True, delimiter='\t',  dtype=tuple(datatype),
 #					missing_values=(-999, -888, '-999', '-888'), skip_footer=1)
 
-test_data =np.genfromtxt("test_array.csv", delimiter=',',
-					skip_header=False, names=True,
-					missing_values={0:'NaN'}, filling_values={0:'replaced'},
-					dtype=np.object)
-sys.exit()
-# Load in the test data responses
-data = np.genfromtxt("HF_data_fall2016.txt", delimiter='\t',
-					skip_header=True, names=False)
-#					missing_values={'NaN'}, filling_values={'-999'},
+#test_data =np.genfromtxt("test_array.csv", delimiter=',',
+#					skip_header=False, names=True,
+#					missing_values={0:'NaN'}, filling_values={0:'replaced'},
 #					dtype=np.object)
-sys.exit()
+#sys.exit()
+
+# Save the file path and name of the data
+responses_file = "..\HF_data_fall2016.txt"
 
 # Load in the test data responses
-data = np.genfromtxt("CHAMP Test Questionnaire (Responses) - Form Responses 1.tsv",
-					skip_header=0, names=True, delimiter='\t',
-					missing_values={0:""}, filling_values={0:-999},
-					dtype=np.object)
+data = np.genfromtxt(responses_file, delimiter='\t',
+					dtype=np.object,
+					skip_header=1, names=True)
+sys.exit()
 
 ### This part was removed because we don't have a seperate free response form
 #"free responses" data frame
