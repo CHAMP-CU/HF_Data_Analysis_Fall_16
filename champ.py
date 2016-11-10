@@ -8,6 +8,7 @@ from textwrap import wrap
 from scipy import stats
 import re
 import sys
+from champ_funcs import *
 
 #Dictionary data frame
 # Load the data dictionary
@@ -34,13 +35,13 @@ for i in range(len(datatype)):
 		datatype[i] = int
 	elif dic['Data_type'][i] == 'Date':
 		datatype[i] = np.object
-	elif dic['Data_type'][i] == 'Free_response':
+	elif dic['Data_type'][i] == 'Free response':
 		datatype[i] = np.object
 	elif dic['Data_type'][i] == 'Comment':
 		datatype[i] = np.object
 	elif dic['Data_type'][i] == 'Nominal':
 		datatype[i] = np.object
-	elif dic['Data_type'][i] == 'Multiple_selection':
+	elif dic['Data_type'][i] == 'Multiple selection':
 		datatype[i] = np.object
 	elif dic['Data_type'][i] == 'Ordinal':
 		datatype[i] = int
@@ -115,6 +116,8 @@ plt.ylabel("% 'yes'")
 for i in range(2):
 	plt.annotate('%3.1f%%' % ((100*((subframe=='Available')+(subframe=='Private')).sum())/(((subframe=='Collpased')+(subframe=='Private')+(subframe=='Communal')+(subframe=='Available')).sum()))[i], (i, 10), ha='center')
 plt.savefig('binary')
+
+
 
 #Free-response evaluation
 responsecount = 0
