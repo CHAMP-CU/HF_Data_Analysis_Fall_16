@@ -122,6 +122,72 @@ category_names = categories.columns
 #					skip_header=1, names=True, dtype=np.object, delimiter='\t')
 #rf = DataFrame(responses)
 
+#Plot tables
+mask = (dic['Data_type']=="Ordinal")+(dic['Data_type']=="Categorical")+(dic['Data_type']=="Binary")+(dic['Data_type']=="Count")
+subframe = df.ix[:, mask]
+for i in range(len(subframe.T)):
+	print dic['Location'][mask][i]
+	print dic['Question_Text'][mask][i]
+	if dic['Data_type'][mask][i] == 'Ordinal':
+		print "Category\t\tn\tMean\t1\t2\t3\t4\t5\t6\t(4-6)\tp-value"
+		for j in range(len(category_names)):
+			width = np.zeros(6)
+			total = subframe.ix[:, i].ix[categories.ix[:, j]].valid().count()
+			for k in range(6):
+				width[k] = (subframe.ix[:, i].ix[categories.ix[:, j]]==(k+1)).mean()*1.
+			pval = stats.ranksums(subframe.ix[:, i].ix[categories.ix[:, j]].dropna(), subframe.ix[:, i].ix[-categories.ix[:, j]].dropna())[1]
+			print '%21s\t%i' % (category_names[j], total) + '\t%2.1f' % (subframe.ix[:, i].ix[categories.ix[:, j]]).mean() + '\t%3.1f%%'*6 % tuple(width*100)+'\t%3.1f%%' % (width[3:].sum()*100) +'\t%3.2f' % (pval)+'*'*(pval < 0.05)
+		print
+	elif dic['Data_type'][mask][i] == 'Binary':
+		continue
+		print "Category\t\t n\tyes\t no\tp-value"
+		for j in range(len(category_names)):
+			yes = subframe.ix[:, i].ix[masks[j]].str.contains('y').sum()
+			no = subframe.ix[:, i].ix[masks[j]].str.contains('n').sum()
+			total = yes+no
+			if categories[j] !='All':
+				p0 = subframe.ix[:, i].ix[-masks[j]].str.contains('y').sum()*1./(subframe.ix[:, i].ix[-masks[j]].str.contains('y').sum()+subframe.ix[:, i].ix[-masks[j]].str.contains('n').sum())
+				pval = stats.binom_test((yes, no), p=p0)
+			else:
+				pval = np.nan
+			print '%21s\t%i' % (category_names[j], total) + '\t%3.1f%%'*2 % (yes*1./total*100, no*1./total*100)+'\t%3.2f' % (pval)+'*'*(pval < 0.05)
+		print
+	elif (dic['Data_type'][mask][i] == 'Categorical') *(i>2):
+
+		responsetypes = dic['Data_values'][mask][i].split(';')
+		print "Category\t\t n\t"+ '%s\t'*len(responsetypes) % tuple(responsetypes)+"p-value"
+		for j in range(len(category_names)):
+			width = np.zeros(len(responsetypes))
+			total = subframe.ix[:, i].ix[categories.ix[:, j]].valid().count()
+			for k in range(len(responsetypes)):
+				width[k] = (responsetypes[k]==subframe.ix[:, i].ix[categories.ix[:, j]]).mean()
+			'''suc = subframe.ix[:, i].ix[masks[j]].str.contains(responsetypes[0], case=False).sum()
+			fail = subframe.ix[:, i].ix[masks[j]].str.contains(responsetypes[1], case=False).sum()
+			total = suc+fail
+			if categories[j] !='All':
+				p0 = subframe.ix[:, i].ix[-masks[j]].str.contains(responsetypes[0], case=False).sum()*1./(subframe.ix[:, i].ix[-masks[j]].str.contains(responsetypes[1], case=False).sum()+subframe.ix[:, i].ix[-masks[j]].str.contains(responsetypes[0], case=False).sum())
+				pval = stats.binom_test((suc, fail), p=p0)
+			else:
+				pval = np.nan'''
+			print '%21s\t%i' % (category_names[j], total) + '\t%3.1f%%'*len(responsetypes) % tuple(width*100)#+'\t%3.2f' % (pval)+'*'*(pval < 0.05)
+		print
+	elif (dic['Data_type'][mask][i] == 'Count')*(i > 5):
+		continue
+
+		responsetypes = np.unique(subframe.ix[:, i].dropna())
+		print "Category\t\tn\t"+"Mean"+ "\t%s"*len(responsetypes) % tuple(responsetypes)+ "\tp-value"
+		for j in range(len(categories)):
+			width = np.zeros(len(responsetypes))
+			total = np.in1d(subframe.ix[:, i].ix[masks[j]], responsetypes).sum()
+			for k in range(len(responsetypes)):
+				width[k] = (subframe.ix[:, i].ix[masks[j]]==responsetypes[k]).sum()*1./total
+			pval = stats.ranksums(subframe.ix[:, i].ix[masks[j]].dropna(), subframe.ix[:, i].ix[-masks[j]].dropna())[1]
+			print '%21s\t%i' % (category_names[j], total) + '\t%2.1f' % (subframe.ix[:, i].ix[masks[j]]).mean() + '\t%3.1f%%'*len(responsetypes) % tuple(width*100)+'\t%3.2f' % (pval)+'*'*(pval < 0.05)
+		print
+
+
+
+
 sys.exit()
 #Plot binary responses
 
