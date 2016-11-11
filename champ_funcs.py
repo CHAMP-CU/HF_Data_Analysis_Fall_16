@@ -10,7 +10,7 @@ def standard_major(given_major):
         major = "computer science"
     elif given_major == "me":
         major = "mechanical engineering"
-    elif given_major == "chemical engneering"
+    elif given_major == "chemical engneering":
         major = "mechanical engineering"
     return major
 
