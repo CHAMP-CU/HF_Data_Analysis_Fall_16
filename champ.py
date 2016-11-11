@@ -48,26 +48,21 @@ for i in range(len(datatype)):
 	else:
 		datatype[i] = np.object
 
-### OLD DATA READIN
-#"data" data frame
-#data = np.genfromtxt("CHAMP Test Questionnaire (Responses) - Form Responses 1.tsv",
-#					skip_header=0, names=True, delimiter='\t',  dtype=tuple(datatype),
-#					missing_values=(-999, -888, '-999', '-888'), skip_footer=1)
-
-#test_data =np.genfromtxt("test_array.csv", delimiter=',',
-#					skip_header=False, names=True,
-#					missing_values={0:'NaN'}, filling_values={0:'replaced'},
-#					dtype=np.object)
-#sys.exit()
-
 # Save the file path and name of the data
 responses_file = "..\HF_data_fall2016.txt"
 
 # Load in the test data responses
 data = np.genfromtxt(responses_file, delimiter='\t',
-					dtype=np.object,
+					dtype=datatype,
 					skip_header=0, names=True)
 df = DataFrame(data)
+
+# Change the column names of the DataFrame
+df.columns = dic["Fall_2016_Question_Code"]
+
+# Standardize the majors given
+for i in range(0, df.shape[0]):
+	df.iloc[i]["crew_major"] = standard_major(df.iloc[i]["crew_major"])
 
 ### This part was removed because we don't have a seperate free response form
 #"free responses" data frame

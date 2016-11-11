@@ -14,7 +14,7 @@ function [] = make_tsv_file(xcel_file, num_rows)
 % Outputs:  a tsv file to be used by the champ.py script
 
 % Create the range that is used.
-range = strcat('A1:GB',num_rows);
+range = strcat('A1:FT',num_rows);
 
 % The num and text data aren't used, but I put in them anyways just in case
 % we want to change it later.

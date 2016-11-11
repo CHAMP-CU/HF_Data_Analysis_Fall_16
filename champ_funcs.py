@@ -5,11 +5,19 @@
 # Modified: 20161110
 
 def standard_major(given_major):
-
+    major = given_major.lower()
+    if given_major == "macs":
+        major = "computer science"
+    elif given_major == "me":
+        major = "mechanical engineering"
+    elif given_major == "chemical engneering"
+        major = "mechanical engineering"
+    return major
 
 def standard_country(given_country):
-
+    country = given_country.lower()
+    return country
 
 def standard_languages(given_language):
-
-    
+    language = given_country.lower()
+    return country
