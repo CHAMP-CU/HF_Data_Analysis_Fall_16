@@ -75,83 +75,42 @@ for i in range(0, df.shape[0]):
 	
 #Categorize participants
 categories = DataFrame(index=np.arange(len(df)))
-categories['Male'] = copy(df.crew_gender=='Male')
-categories['Female'] = copy(df.crew_gender=='Female')
-categories['Flight Experience'] = copy(df.crew_flight_01=='Yes')
-categories['Habitat Experience'] = copy(experience.ix[:, [9, 13, 14, 15, 16, 17]].sum(1) > 0)
-categories['Space Experience'] = copy(experience.ix[:, [7, 8, 9, 10, 11, 12]].sum(1) > 0)
-categories['No Experience'] = copy(experience.sum(1)==0)
-categories['Expert'] = copy(experience.sum(1)>=3)
-categories['International'] = copy(df.crew_gender=='Male')
-categories['US National'] = copy(df.crew_travel=='No')
-categories['30 and older'] = copy(df.crew_age>= 30)
-categories['Under 30'] = copy(df.crew_age< 30) 
+categories['Male'] = np.copy(df.crew_gender=='Male')
+categories['Female'] = np.copy(df.crew_gender=='Female')
+categories['Flight Experience'] = np.copy(df.crew_flight_01=='Yes')
+categories['Habitat Experience'] = np.copy(experience.ix[:, [9, 13, 14, 15, 16, 17]].sum(1) > 0)
+categories['Space Experience'] = np.copy(experience.ix[:, [7, 8, 9, 10, 11, 12]].sum(1) > 0)
+categories['No Experience'] = np.copy(experience.sum(1)==0)
+categories['Expert'] = np.copy(experience.sum(1)>=3)
+categories['International'] = np.copy(df.crew_gender=='Male')
+categories['US National'] = np.copy(df.crew_travel=='No')
+categories['30 and older'] = np.copy(df.crew_age>= 30)
+categories['Under 30'] = np.copy(df.crew_age< 30) 
 ansur_f = np.array([58.5, 14.9, 25.6])
 ansur_m = np.array([76.6, 22.1, 35.8])
 above = (df.crew_height > ansur_m[0])+(df.crew_shoulder > ansur_m[1])+(df.crew_thumb > ansur_m[2])
 below = (df.crew_height < ansur_f[0])+(df.crew_shoulder < ansur_f[1])+(df.crew_thumb < ansur_f[2])
-categories['Above Limits'] = copy(above)
-categories['Below Limits'] = copy(below)
-categories['New Participant'] = copy(df.crew_prior=='No')
-categories['Repeat Participant'] = copy(df.crew_prior=='Yes, in Spring 2016')
-categories['CHAMP'] = copy((df.crew_champ=='Yes (former)')+(df.crew_champ=='Yes (current)'))
-categories['Non-CHAMP'] = copy(df.crew_champ=='No')
-categories['CM1'] = copy(df.crew_id=='1')
-categories['CM2'] = copy(df.crew_id=='2')
-categories['CM3'] = copy(df.crew_id=='3')
-categories['CM4'] = copy(df.crew_id=='4')
+categories['Above Limits'] = np.copy(above)
+categories['Below Limits'] = np.copy(below)
+categories['New Participant'] = np.copy(df.crew_prior=='No')
+categories['Repeat Participant'] = np.copy(df.crew_prior=='Yes, in Spring 2016')
+categories['CHAMP'] = np.copy((df.crew_champ=='Yes (former)')+(df.crew_champ=='Yes (current)'))
+categories['Non-CHAMP'] = np.copy(df.crew_champ=='No')
+categories['CM1'] = np.copy(df.crew_id=='1')
+categories['CM2'] = np.copy(df.crew_id=='2')
+categories['CM3'] = np.copy(df.crew_id=='3')
+categories['CM4'] = np.copy(df.crew_id=='4')
 
 category_names = categories.columns
 
-# Standardize the cournties given
-
-
-# Standardize the language given
-
-
-# Identify which people are in the simpler categories
-flt_exp = df.crew_flight_01 == 'Yes'
-no_flt_exp = -flt_exp
-hab_exp = df.crew_experience != 'NaN'
-no_hab_exp = -hab_exp
-exprt = df.crew_test == 1
-no_exprt = -exprt
-male = df.crew_gender == 'Male'
-female = df.crew_gender == 'Female'
-ovr_30 = df.crew_age >= 30
-undr_30 = df.crew_age < 30
-non_champ = df.crew_champ == 'No'
-champ = -non_champ
-new_participant = df.crew_prior == 'No'
-repeat_participant = -new_participant
-CM1 = df.crew_id == '1'
-CM2 = df.crew_id == '2'
-CM3 = df.crew_id == '3'
-CM4 = df.crew_id == '4'
-
-# Identify which people are in the move complex categories
-# These need to be updated, they are placeholders for nwo
-us_national = df.crew_national != 'NaN'
-international = df.crew_national == 'NaN'
-blw_limits = df.crew_height <= 72
-abv_limits = df.crew_height > 72
-
-# Make the categories DataFrame
-cf = DataFrame({'flt_exp' : flt_exp, 'no_flt_exp' : no_flt_exp,
-		'hab_exp' : hab_exp, 'no_hab_exp' : no_hab_exp,
-		'exprt' : exprt, 'no_exprt' : no_exprt,
-		'male' : male, 'female' : female,
-		'us_national' : us_national, 'international' : international,
-		'ovr_30' : ovr_30, 'undr_30' : undr_30,
-		'blw_limits' : blw_limits, 'abv_limits' : abv_limits,
-		'new_participant' : new_participant,
-		'repeat_participant' : repeat_participant,
-		'champ' : champ, 'non_champ' : non_champ,
-		'CM1' : CM1, 'CM2' : CM2, 'CM3' : CM3, 'CM4' : CM4})
+### This part was removed because we don't have a seperate free response form
+#"free responses" data frame
+#df = DataFrame(data)
+#responses = np.genfromtxt("Questionnaire Data - Free responses.tsv",
+#					skip_header=1, names=True, dtype=np.object, delimiter='\t')
+#rf = DataFrame(responses)
 
 sys.exit()
-# Everything after this point is old code form Spring 2016
-
 #Plot binary responses
 
 binary = (dic['Data_type']=='Categorical')+(dic['Data_type']=='Binary')
