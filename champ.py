@@ -69,13 +69,14 @@ for i in range(0, df.shape[0]):
 
 # Standardize the language given
 
-# Create the categories frame
-categories = np.zeros((df.shape[0], 22))
 
 # Identify which people are in the simpler categories
 flt_exp = df.crew_flight_01 == 'Yes'
+no_flt_exp = -flt_exp
 hab_exp = df.crew_experience != 'NaN'
+no_hab_exp = -hab_exp
 exprt = df.crew_test == 1
+no_exprt = -exprt
 male = df.crew_gender == 'Male'
 female = df.crew_gender == 'Female'
 ovr_30 = df.crew_age >= 30
@@ -93,15 +94,21 @@ CM4 = df.crew_id == '4'
 # These need to be updated, they are placeholders for nwo
 us_national = df.crew_national != 'NaN'
 international = df.crew_national == 'NaN'
-blw_limints = df.crew_height <= 72
+blw_limits = df.crew_height <= 72
 abv_limits = df.crew_height > 72
 
 # Make the categories DataFrame
-cf = DataFrame(categories,
-		columns=['flt_exp', 'no_flt_exp', 'hab_exp', 'no_hab_exp',
-		'exprt', 'no_exprt', 'male', 'female', 'us_national', 'international',
-		'ovr_30', 'undr_30', 'blw_limits', 'abv_limits', 'new_participant',
-		'repeat_participant', 'champ', 'non_champ', 'CM1', 'CM2', 'CM3', 'CM4'])
+cf = DataFrame({'flt_exp' : flt_exp, 'no_flt_exp' : no_flt_exp,
+		'hab_exp' : hab_exp, 'no_hab_exp' : no_hab_exp,
+		'exprt' : exprt, 'no_exprt' : no_exprt,
+		'male' : male, 'female' : female,
+		'us_national' : us_national, 'international' : international,
+		'ovr_30' : ovr_30, 'undr_30' : undr_30,
+		'blw_limits' : blw_limits, 'abv_limits' : abv_limits,
+		'new_participant' : new_participant,
+		'repeat_participant' : repeat_participant,
+		'champ' : champ, 'non_champ' : non_champ,
+		'CM1' : CM1, 'CM2' : CM2, 'CM3' : CM3, 'CM4' : CM4})
 
 sys.exit()
 # Everything after this point is old code form Spring 2016
