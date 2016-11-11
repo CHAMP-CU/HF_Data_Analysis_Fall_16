@@ -10,6 +10,17 @@ import re
 import sys
 from champ_funcs import *
 
+#Define plot styles
+
+plt.style.use('fivethirtyeight')
+plt.rcParams['axes.facecolor']='w'
+plt.rcParams['figure.facecolor']='w'
+plt.rcParams['axes.edgecolor']='w'
+plt.rcParams['axes.grid']=False
+plt.rcParams['figure.subplot.bottom'] = 0.12
+plt.rcParams['savefig.facecolor']='w'
+
+
 #Dictionary data frame
 # Load the data dictionary
 dic = np.genfromtxt("Data Dictionary - Fall 2016.tsv",
@@ -75,6 +86,7 @@ for i in range(0, df.shape[0]):
 	
 #Categorize participants
 categories = DataFrame(index=np.arange(len(df)))
+categories['All'] = np.copy(np.ones(len(df), bool))
 categories['Male'] = np.copy(df.crew_gender=='Male')
 categories['Female'] = np.copy(df.crew_gender=='Female')
 categories['Flight Experience'] = np.copy(df.crew_flight_01=='Yes')
