@@ -103,14 +103,55 @@ categories['CM4'] = copy(df.crew_id=='4')
 
 category_names = categories.columns
 
-### This part was removed because we don't have a seperate free response form
-#"free responses" data frame
-#df = DataFrame(data)
-#responses = np.genfromtxt("Questionnaire Data - Free responses.tsv",
-#					skip_header=1, names=True, dtype=np.object, delimiter='\t')
-#rf = DataFrame(responses)
+# Standardize the cournties given
+
+
+# Standardize the language given
+
+
+# Identify which people are in the simpler categories
+flt_exp = df.crew_flight_01 == 'Yes'
+no_flt_exp = -flt_exp
+hab_exp = df.crew_experience != 'NaN'
+no_hab_exp = -hab_exp
+exprt = df.crew_test == 1
+no_exprt = -exprt
+male = df.crew_gender == 'Male'
+female = df.crew_gender == 'Female'
+ovr_30 = df.crew_age >= 30
+undr_30 = df.crew_age < 30
+non_champ = df.crew_champ == 'No'
+champ = -non_champ
+new_participant = df.crew_prior == 'No'
+repeat_participant = -new_participant
+CM1 = df.crew_id == '1'
+CM2 = df.crew_id == '2'
+CM3 = df.crew_id == '3'
+CM4 = df.crew_id == '4'
+
+# Identify which people are in the move complex categories
+# These need to be updated, they are placeholders for nwo
+us_national = df.crew_national != 'NaN'
+international = df.crew_national == 'NaN'
+blw_limits = df.crew_height <= 72
+abv_limits = df.crew_height > 72
+
+# Make the categories DataFrame
+cf = DataFrame({'flt_exp' : flt_exp, 'no_flt_exp' : no_flt_exp,
+		'hab_exp' : hab_exp, 'no_hab_exp' : no_hab_exp,
+		'exprt' : exprt, 'no_exprt' : no_exprt,
+		'male' : male, 'female' : female,
+		'us_national' : us_national, 'international' : international,
+		'ovr_30' : ovr_30, 'undr_30' : undr_30,
+		'blw_limits' : blw_limits, 'abv_limits' : abv_limits,
+		'new_participant' : new_participant,
+		'repeat_participant' : repeat_participant,
+		'champ' : champ, 'non_champ' : non_champ,
+		'CM1' : CM1, 'CM2' : CM2, 'CM3' : CM3, 'CM4' : CM4})
 
 sys.exit()
+# Everything after this point is old code form Spring 2016
+
 #Plot binary responses
 
 binary = (dic['Data_type']=='Categorical')+(dic['Data_type']=='Binary')
