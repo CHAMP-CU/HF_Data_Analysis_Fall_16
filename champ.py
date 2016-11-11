@@ -49,7 +49,7 @@ for i in range(len(datatype)):
 		datatype[i] = np.object
 
 # Save the file path and name of the data
-responses_file = "..\HF_data_fall2016.txt"
+responses_file = "../HF_data_fall2016.txt"
 
 # Load in the test data responses
 data = np.genfromtxt(responses_file, delimiter='\t',
@@ -60,9 +60,48 @@ df = DataFrame(data)
 # Change the column names of the DataFrame
 df.columns = dic["Fall_2016_Question_Code"]
 
+#Classify participant experience
+experience = -DataFrame(index=df.index, columns= dic['Data_values'][13].split(';'), 
+				dtype=bool)
+for i in range(len(df)):
+        for j in range(experience.shape[-1]):
+                experience.ix[i, j] =  experience.columns[j] in df.crew_experience[i]
+
+
 # Standardize the majors given
 for i in range(0, df.shape[0]):
 	df.iloc[i]["crew_major"] = standard_major(df.iloc[i]["crew_major"])
+	
+	
+#Categorize participants
+categories = DataFrame(index=np.arange(len(df)))
+categories['Male'] = copy(df.crew_gender=='Male')
+categories['Female'] = copy(df.crew_gender=='Female')
+categories['Flight Experience'] = copy(df.crew_flight_01=='Yes')
+categories['Habitat Experience'] = copy(experience.ix[:, [9, 13, 14, 15, 16, 17]].sum(1) > 0)
+categories['Space Experience'] = copy(experience.ix[:, [7, 8, 9, 10, 11, 12]].sum(1) > 0)
+categories['No Experience'] = copy(experience.sum(1)==0)
+categories['Expert'] = copy(experience.sum(1)>=3)
+categories['International'] = copy(df.crew_gender=='Male')
+categories['US National'] = copy(df.crew_travel=='No')
+categories['30 and older'] = copy(df.crew_age>= 30)
+categories['Under 30'] = copy(df.crew_age< 30) 
+ansur_f = np.array([58.5, 14.9, 25.6])
+ansur_m = np.array([76.6, 22.1, 35.8])
+above = (df.crew_height > ansur_m[0])+(df.crew_shoulder > ansur_m[1])+(df.crew_thumb > ansur_m[2])
+below = (df.crew_height < ansur_f[0])+(df.crew_shoulder < ansur_f[1])+(df.crew_thumb < ansur_f[2])
+categories['Above Limits'] = copy(above)
+categories['Below Limits'] = copy(below)
+categories['New Participant'] = copy(df.crew_prior=='No')
+categories['Repeat Participant'] = copy(df.crew_prior=='Yes, in Spring 2016')
+categories['CHAMP'] = copy((df.crew_champ=='Yes (former)')+(df.crew_champ=='Yes (current)'))
+categories['Non-CHAMP'] = copy(df.crew_champ=='No')
+categories['CM1'] = copy(df.crew_id=='1')
+categories['CM2'] = copy(df.crew_id=='2')
+categories['CM3'] = copy(df.crew_id=='3')
+categories['CM4'] = copy(df.crew_id=='4')
+
+category_names = categories.columns
 
 ### This part was removed because we don't have a seperate free response form
 #"free responses" data frame
