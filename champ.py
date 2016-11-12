@@ -95,8 +95,9 @@ categories['Female'] = np.copy(df.crew_gender=='Female')
 categories['Flight Experience'] = np.copy(df.crew_flight_01=='Yes')
 categories['Habitat Experience'] = np.copy(experience.ix[:, [9, 13, 14, 15, 16, 17]].sum(1) > 0)
 categories['Space Experience'] = np.copy(experience.ix[:, [7, 8, 9, 10, 11, 12]].sum(1) > 0)
-categories['No Experience'] = np.copy(experience.sum(1)==0)
 categories['Expert'] = np.copy(experience.sum(1)>=3)
+categories['Any Experience'] = np.copy(experience.sum(1)>0)
+categories['No Experience'] = np.copy(experience.sum(1)==0)
 categories['International'] = np.copy(df.crew_gender=='Male')
 categories['US National'] = np.copy(df.crew_travel=='No')
 categories['30 and older'] = np.copy(df.crew_age>= 30)
@@ -142,8 +143,9 @@ subcat_national= pd.concat([categories['All'], categories['US National'],
 subcat_experience = pd.concat([categories['All'], categories['Flight Experience'], 
 								categories['Habitat Experience'], 
 								categories['Space Experience'],
-								categories['No Experience'],
-								categories['Expert']], axis=1)
+								categories['Expert'], 
+								categories['Any Experience'],
+								categories['No Experience']], axis=1)
 
 
 #What locations can be smaller?
