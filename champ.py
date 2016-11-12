@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from textblob import TextBlob
 from pandas import DataFrame
+import pandas as pd
 import matplotlib
 import json
 from textwrap import wrap
@@ -55,7 +56,7 @@ for i in range(len(datatype)):
 	elif dic['Data_type'][i] == 'Multiple selection':
 		datatype[i] = np.object
 	elif dic['Data_type'][i] == 'Ordinal':
-		datatype[i] = int
+		datatype[i] = float
 	else:
 		datatype[i] = np.object
 
@@ -67,6 +68,8 @@ data = np.genfromtxt(responses_file, delimiter='\t',
 					dtype=datatype,
 					skip_header=0, names=True)
 df = DataFrame(data)
+#There should be no negative values in the data
+df[df<0] = np.nan
 
 # Change the column names of the DataFrame
 df.columns = dic["Fall_2016_Question_Code"]
@@ -102,7 +105,12 @@ ansur_f = np.array([58.5, 14.9, 25.6])
 ansur_m = np.array([76.6, 22.1, 35.8])
 above = (df.crew_height > ansur_m[0])+(df.crew_shoulder > ansur_m[1])+(df.crew_thumb > ansur_m[2])
 below = (df.crew_height < ansur_f[0])+(df.crew_shoulder < ansur_f[1])+(df.crew_thumb < ansur_f[2])
-categories['Above Limits'] = np.copy(above)
+#categories['Above Limits'] = np.copy(above)
+categories['First Quartile'] = df.crew_height <= 63.
+categories['Second Quartile'] = (df.crew_height > 63.)*(df.crew_height <= 67.)
+categories['Third Quartile'] = (df.crew_height > 67.)*(df.crew_height <= 71.)
+categories['Fourth Quartile'] = (df.crew_height > 71.)
+
 categories['Below Limits'] = np.copy(below)
 categories['New Participant'] = np.copy(df.crew_prior=='No')
 categories['Repeat Participant'] = np.copy(df.crew_prior=='Yes, in Spring 2016')
@@ -114,6 +122,40 @@ categories['CM3'] = np.copy(df.crew_id=='3')
 categories['CM4'] = np.copy(df.crew_id=='4')
 
 category_names = categories.columns
+
+#Category classes
+subcat_height = pd.concat([categories['All'], 
+							categories['First Quartile'],  
+							categories['Second Quartile'],
+							categories['Third Quartile'],
+							categories['Fourth Quartile']], axis=1)
+subcat_gender = pd.concat([categories['All'], 
+							categories['Male'],  categories['Female']], axis=1)
+subcat_champ = pd.concat([categories['All'], 
+							categories['CHAMP'],  categories['Non-CHAMP']], axis=1)
+subcat_repeat = pd.concat([categories['All'], categories['Repeat Participant'],  
+							categories['New Participant']], axis=1)
+subcat_cm = pd.concat([categories['All'], categories['CM1'], categories['CM2'], 
+							categories['CM3'], categories['CM4']], axis=1)
+subcat_national= pd.concat([categories['All'], categories['US National'], 
+							categories['International']], axis=1)
+subcat_experience = pd.concat([categories['All'], categories['Flight Experience'], 
+								categories['Habitat Experience'], 
+								categories['Space Experience'],
+								categories['No Experience'],
+								categories['Expert']], axis=1)
+
+
+#What locations can be smaller?
+smaller = (df.ix[:, dic['Aspect']=='smaller']=='Yes')
+smaller.columns = ['Airlock', 'Galley', 'Sleep', 'Storage', 'Command', 'Science', 'ECLSS',
+					'Emergency Path', 'Technology Development', 'Exercise', 'Hygiene']
+(100*smaller.mean(0))[np.argsort(smaller.mean(0))].plot(kind='barh', stacked=True)
+plt.subplots_adjust(left=0.3)
+plt.xlabel('% Yes')
+plt.title('\n'.join(wrap("Could the volume of the following spaces be smaller "+ 
+							"and still acceptable for the tasks you performed?", 70)), 
+							size='small')
 
 ### This part was removed because we don't have a seperate free response form
 #"free responses" data frame
@@ -128,7 +170,9 @@ subframe = df.ix[:, mask]
 for i in range(len(subframe.T)):
 	print dic['Location'][mask][i]
 	print dic['Question_Text'][mask][i]
+	
 	if dic['Data_type'][mask][i] == 'Ordinal':
+		print dic['Data_values'][mask][i]
 		print "Category\t\tn\tMean\t1\t2\t3\t4\t5\t6\t(4-6)\tp-value"
 		for j in range(len(category_names)):
 			width = np.zeros(6)
@@ -139,14 +183,14 @@ for i in range(len(subframe.T)):
 			print '%21s\t%i' % (category_names[j], total) + '\t%2.1f' % (subframe.ix[:, i].ix[categories.ix[:, j]]).mean() + '\t%3.1f%%'*6 % tuple(width*100)+'\t%3.1f%%' % (width[3:].sum()*100) +'\t%3.2f' % (pval)+'*'*(pval < 0.05)
 		print
 	elif dic['Data_type'][mask][i] == 'Binary':
-		continue
-		print "Category\t\t n\tyes\t no\tp-value"
+		responsetypes = dic['Data_values'][mask][i].split(';')
+		print "Category\t\t n\t"+ '%s\t'*len(responsetypes) % tuple(responsetypes)+"p-value"
 		for j in range(len(category_names)):
-			yes = subframe.ix[:, i].ix[masks[j]].str.contains('y').sum()
-			no = subframe.ix[:, i].ix[masks[j]].str.contains('n').sum()
+			yes = (subframe.ix[:, i].ix[categories.ix[:, j]]==responsetypes[0]).sum()
+			no = (subframe.ix[:, i].ix[categories.ix[:, j]]==responsetypes[1]).sum()
 			total = yes+no
-			if categories[j] !='All':
-				p0 = subframe.ix[:, i].ix[-masks[j]].str.contains('y').sum()*1./(subframe.ix[:, i].ix[-masks[j]].str.contains('y').sum()+subframe.ix[:, i].ix[-masks[j]].str.contains('n').sum())
+			if category_names[j] !='All':
+				p0 = subframe.ix[:, i].ix[-categories.ix[:, j]].str.contains(responsetypes[0]).mean()
 				pval = stats.binom_test((yes, no), p=p0)
 			else:
 				pval = np.nan
