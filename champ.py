@@ -61,16 +61,18 @@ for i in range(len(datatype)):
 		datatype[i] = np.object
 
 # Save the file path and name of the data
-responses_file = "../HF_data_fall2016.txt"
+responses_file = "../CHAMP Test Questionnaire (Responses).xlsx"
 
 #Output path
 output_path = '../results'
 
 # Load in the test data responses
-data = np.genfromtxt(responses_file, delimiter='\t',
-					dtype=datatype, missing_values='',
-					skip_header=0, names=True)
-df = DataFrame(data)
+#data = np.genfromtxt(responses_file, delimiter='\t',
+#					dtype=datatype, missing_values='',
+#					skip_header=0, names=True)
+#df = DataFrame(data)
+df = pd.read_excel(responses_file, names=dic["Fall_2016_Question_Code"], parse_cols=len(dic)-1)
+#df = df.convert_objects( dict(zip(dic["Fall_2016_Question_Code"], datatype)))
 #There should be no negative values in the data
 df[df<0] = np.nan
 
@@ -100,8 +102,10 @@ df = df.mask(exclude*(datatype!=np.object), try_cast=True)
 experience = -DataFrame(index=df.index, columns= dic['Data_values'][13].split(';'), 
 				dtype=bool)
 for i in range(len(df)):
-        for j in range(experience.shape[-1]):
-                experience.ix[i, j] =  experience.columns[j] in df.crew_experience[i]
+	for j in range(experience.shape[-1]):
+		if df.crew_experience[i] != df.crew_experience[i]:
+			continue
+		experience.ix[i, j] =  experience.columns[j] in df.crew_experience[i]
 
 
 tag_matrix = (DataFrame(dic).ix[:, -11:] =='1').T
@@ -145,10 +149,10 @@ categories['New Participant'] = np.copy(df.crew_prior=='No')
 categories['Repeat Participant'] = np.copy(df.crew_prior=='Yes, in Spring 2016')
 categories['CHAMP'] = np.copy((df.crew_champ=='Yes (former)')+(df.crew_champ=='Yes (current)'))
 categories['Non-CHAMP'] = np.copy(df.crew_champ=='No')
-categories['CM1'] = np.copy(df.crew_id=='1')
-categories['CM2'] = np.copy(df.crew_id=='2')
-categories['CM3'] = np.copy(df.crew_id=='3')
-categories['CM4'] = np.copy(df.crew_id=='4')
+categories['CM1'] = np.copy(df.crew_id==1)
+categories['CM2'] = np.copy(df.crew_id==2)
+categories['CM3'] = np.copy(df.crew_id==3)
+categories['CM4'] = np.copy(df.crew_id==4)
 
 category_names = categories.columns
 
@@ -210,7 +214,7 @@ mask+= (dic['Data_type']=="Multiple selection")+(dic['Data_type']=="Multiple Sel
 #Exclude questions with fewer than 8 responses
 mask *= (df.count(axis=0) > 8)#+(df.sum(0).str.count('NaN') < len(df)-8)
 subframe = df.ix[:, mask]
-for i in np.argsort(np.array(dic['Order_Asked'][mask], int)):
+for i in np.argsort(np.array(dic['Order_Asked'][mask], int))[1:]:
 	print np.array(dic['Order_Asked'][mask], int)[i]
 	print dic['Location'][mask][i]
 	print dic['Question_Text'][mask][i]
@@ -247,17 +251,19 @@ for i in np.argsort(np.array(dic['Order_Asked'][mask], int)):
 		for j in range(len(category_names)):
 			width = np.zeros(len(responsetypes))
 			width_not = np.zeros(len(responsetypes))
-			total = (subframe.ix[:, i].ix[categories.ix[:, j]]!='NaN').sum()
-			total_not = (subframe.ix[:, i].ix[-categories.ix[:, j]]!='NaN').sum()
+			#total = (subframe.ix[:, i].ix[categories.ix[:, j]]!='NaN').sum()
+			#total_not = (subframe.ix[:, i].ix[-categories.ix[:, j]]!='NaN').sum()
+			total = subframe.ix[:, i].ix[categories.ix[:, j]].valid().count()
+			total_not = subframe.ix[:, i].ix[categories.ix[:, j]].valid().count()
 			if False:
 				for k in range(len(responsetypes)):
-					width[k] = (responsetypes[k]==subframe.ix[:, i].ix[categories.ix[:, j]]).sum()*1./total
-					width_not[k] = (responsetypes[k]==subframe.ix[:, i].ix[-categories.ix[:, j]]).sum()*1./total_not
+					width[k] = (responsetypes[k]==subframe.ix[:, i].ix[categories.ix[:, j]].astype(str)).sum()*1./total
+					width_not[k] = (responsetypes[k]==subframe.ix[:, i].ix[-categories.ix[:, j]].astype(str)).sum()*1./total_not
 					
 				pval = chi2_contingency(np.vstack((width*total, width_not*total_not))[:, (width_not!=0)])[1]
 			else:
 				for k in range(len(responsetypes)):
-					width[k] = (responsetypes[k]==subframe.ix[:, i].ix[categories.ix[:, j]]).sum()*1./total
+					width[k] = (responsetypes[k]==subframe.ix[:, i].ix[categories.ix[:, j]].astype(str)).sum()*1./total
 				pval = np.nan
 			
 			print '%21s\t%i' % (category_names[j], total) + '\t%3.1f%%'*len(responsetypes) % tuple(width*100)+'\t%3.2f' % (pval)+'*'*(pval < 0.05)
