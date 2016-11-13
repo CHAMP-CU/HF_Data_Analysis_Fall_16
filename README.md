@@ -8,9 +8,9 @@ Primary team member: Thomas Jeffries (thomas.jeffries@colorado.edu)
 
 Procedure in order to generate the data needed for the script from the google form responses:
 1) Download the results from the google sheets as an excel file
-2) Open MATLAB
-3) Using the function, "make_tsv_file.m", generate the tsv file from the excel file
-4) Execute champ.py
+2) Place the Excel File containing the data in the path immediately above the code
+3) In this path, run the shell script pipeline.sh: sh pipeline.sh
+4) Check the the adjacent path "../results" for figures and text outputs
 
 *** Make sure that the testing data isn't on the public repository, download the
 file from the google drive.
