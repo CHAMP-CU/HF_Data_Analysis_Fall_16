@@ -214,7 +214,7 @@ mask+= (dic['Data_type']=="Multiple selection")+(dic['Data_type']=="Multiple Sel
 mask+= (dic['Data_type']=="Continuous")'''
 
 #Exclude questions with fewer than 8 responses
-mask *= (df.count(axis=0) > 8)#+(df.sum(0).str.count('NaN') < len(df)-8)
+mask = np.array(df.count(axis=0) > 8)#+(df.sum(0).str.count('NaN') < len(df)-8)
 subframe = df.ix[:, mask]
 for i in np.argsort(np.array(dic['Order_Asked'][mask], int))[1:]:
 	print np.array(dic['Order_Asked'][mask], int)[i]
@@ -253,22 +253,18 @@ for i in np.argsort(np.array(dic['Order_Asked'][mask], int))[1:]:
 		for j in range(len(category_names)):
 			width = np.zeros(len(responsetypes))
 			width_not = np.zeros(len(responsetypes))
-			#total = (subframe.ix[:, i].ix[categories.ix[:, j]]!='NaN').sum()
-			#total_not = (subframe.ix[:, i].ix[-categories.ix[:, j]]!='NaN').sum()
 			total = subframe.ix[:, i].ix[categories.ix[:, j]].valid().count()
 			total_not = subframe.ix[:, i].ix[-categories.ix[:, j]].valid().count()
-			if False:
-				for k in range(len(responsetypes)):
-					width[k] = (responsetypes[k]==subframe.ix[:, i].ix[categories.ix[:, j]].astype(str)).sum()*1./total
-					width_not[k] = (responsetypes[k]==subframe.ix[:, i].ix[-categories.ix[:, j]].astype(str)).sum()*1./total_not
-					
-				pval = chi2_contingency(np.vstack((width*total, width_not*total_not))[:, (width_not!=0)])[1]
+			for k in range(len(responsetypes)):
+				width[k] = (responsetypes[k]==subframe.ix[:, i].ix[categories.ix[:, j]].astype(str)).sum()*1.
+				width_not[k] = (responsetypes[k]==subframe.ix[:, i].ix[-categories.ix[:, j]].astype(str)).sum()*1.
+			obs = np.vstack((width, width_not))
+			if obs[1].min() > 0:
+				pval = stats.chi2_contingency(obs[:, obs[1]>0])[1]
 			else:
-				for k in range(len(responsetypes)):
-					width[k] = (responsetypes[k]==subframe.ix[:, i].ix[categories.ix[:, j]].astype(str)).sum()*1./total
 				pval = np.nan
 			
-			print '%21s\t%i' % (category_names[j], total) + '\t%3.1f%%'*len(responsetypes) % tuple(width*100)+'\t%3.2f' % (pval)+'*'*(pval < 0.05)
+			print '%21s\t%i' % (category_names[j], total) + '\t%3.1f%%'*len(responsetypes) % tuple(width/total*100)+'\t%3.2f' % (pval)+'*'*(pval < 0.05)
 		print
 	elif (dic['Data_type'][mask][i] == 'Count')*(i > 5):
 		
