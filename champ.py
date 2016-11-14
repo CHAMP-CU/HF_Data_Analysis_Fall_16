@@ -20,6 +20,7 @@ plt.rcParams['axes.edgecolor']='w'
 plt.rcParams['axes.grid']=False
 plt.rcParams['figure.subplot.bottom'] = 0.12
 plt.rcParams['savefig.facecolor']='w'
+plt.rcParams['axes.color_cycle'] = [u'#30a2da', u'#fc4f30', u'#e5ae38',  '#beaed4', '#fdc086']
 
 
 #Dictionary data frame
@@ -300,6 +301,7 @@ for i in np.argsort(np.array(dic['Order_Asked'][mask], int))[1:]:
 
 
 def gauge_chart_ordinal_cross(responses, categories):
+	values = dic['Data_values'][responses.name==dic['Fall_2016_Question_Code']][0]
 	stack = DataFrame(columns=np.arange(1, 7), index=categories.columns)
 	for i in range(categories.shape[-1]):
 		stack.ix[i] = np.histogram(responses[categories.ix[:, i]], 
@@ -313,28 +315,30 @@ def gauge_chart_ordinal_cross(responses, categories):
 		plt.axvline(np.cumsum(np.histogram(responses[categories.ix[:, 0]], 
 		np.arange(1, 8), normed=True)[0][::-1])[i]*100, color='lightgray')
 	plt.axis('tight')
-	plt.xlabel('%')
-	plt.legend(bbox_to_anchor=(0., 1.0, 1.12, -0.25))
-	plt.subplots_adjust(left=0.15, right=0.92)
+	plt.xticks(np.arange(0, 101, 10), ('%i%% '*11 % tuple(np.arange(0, 101, 10))).split())
+	#plt.legend(bbox_to_anchor=(0., 1.0, 1.12, -0.25))
+	plt.legend(bbox_to_anchor=(0.3, -0.04, 0.5, 0), ncol=6, fontsize='medium', framealpha=0)
+	plt.annotate(values.split(';')[1].split('-')[1], (0.28, 0.05), xycoords='figure fraction', ha='right', va='center')
+	plt.annotate(values.split(';')[0].split('-')[1], (0.8, 0.05), xycoords='figure fraction', ha='left', va='center')
+	plt.subplots_adjust(left=0.18)
 	
 
-def gauge_chart_categorical_cross(responses, categories, values):
-	stack = DataFrame(columns=np.arange(1, 7), index=categories.columns)
-	for i in range(categories.shape[-1]):
-		stack.ix[i] = np.histogram(responses[categories.ix[:, i]], 
-			np.arange(1, 8), normed=True)[0]
-	(100*stack[::-1].ix[:,  ::-1]).plot(kind='barh', stacked=True, 
-		width=1, edgecolor='w', colors=plt.cm.RdBu_r(np.linspace(0.25, 0.75, 6)), 
-		align='edge', figsize=(12, 6), legend=False)
+def gauge_chart_categorical_cross(responses, categories):
+	values = dic['Data_values'][responses.name==dic['Fall_2016_Question_Code']][0].split(';')
+	stack = DataFrame(columns=values, index=categories.columns)
+	for i in range(len(stack)):
+		for j in range(len(stack.T)):
+			stack.ix[i, j] = (np.array(responses[categories.ix[:, i]], str)==values[j]).sum()
+	(100*stack.T/stack.sum(1)).T[::-1].plot(kind='barh', stacked=True, width=1, 
+		edgecolor='w', legend=False, align='edge', figsize=(12, 6))
 	plt.title("\n".join(wrap(dic['Question_Text']\
 			[responses.name==dic['Fall_2016_Question_Code']][0], 88)), size='medium')
-	for i in range(6):
-		plt.axvline(np.cumsum(np.histogram(responses[categories.ix[:, 0]], 
-		np.arange(1, 8), normed=True)[0][::-1])[i]*100, color='lightgray')
+	for i in range(len(stack.T)):
+		plt.axvline(np.cumsum((stack.T/stack.sum(1)).T.ix[0])[::-1][i]*100, color='lightgray')
 	plt.axis('tight')
-	plt.xlabel('%')
-	plt.legend(bbox_to_anchor=(0., 1.0, 1.12, -0.25))
-	plt.subplots_adjust(left=0.15, right=0.92)
+	plt.xticks(np.arange(0, 101, 10), ('%i%% '*11 % tuple(np.arange(0, 101, 10))).split())
+	plt.legend(bbox_to_anchor=(0.55, -0.05, 0.5, 0), ncol=len(values), fontsize='small')
+	plt.subplots_adjust(left=0.18, right=0.92)
 
 makefigs = True
 if makefigs:
@@ -350,6 +354,18 @@ if makefigs:
 				gauge_chart_ordinal_cross(subframe.ix[:, i], subcats[j])
 				plt.savefig(output_path+"/figs/"+subcat_names[j]+'/'+'%03i' % i)
 				plt.close()
+		elif (dic['Data_type'][mask][i] == 'Categorical')+(dic['Data_type'][mask][i] == 'Binary'):
+			gauge_chart_categorical_cross(subframe.ix[:, i], categories)
+			plt.savefig(output_path+"/figs/all/"+'%03i' % i)
+			plt.close()
+			gauge_chart_categorical_cross(subframe.ix[:, i], DataFrame(categories.All))
+			plt.savefig(output_path+"/figs/all/"+'%03i' % i)
+			plt.close()
+			for j in range(len(subcats)):
+				gauge_chart_categorical_cross(subframe.ix[:, i], subcats[j])
+				plt.savefig(output_path+"/figs/"+subcat_names[j]+'/'+'%03i' % i)
+				plt.close()
+
 
 
 sys.exit()
