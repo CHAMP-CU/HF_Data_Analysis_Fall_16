@@ -15,7 +15,6 @@ from textwrap import wrap
 from scipy import stats
 import re
 import sys
-from champ_funcs import *
 
 
 def standard_major(given_major):

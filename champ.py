@@ -9,10 +9,12 @@ from textwrap import wrap
 from scipy import stats
 import re
 import sys
-from champ_funcs import *
+import champ_funcs as cf
+
+# Load the data
+from load_CHAMP import *
 
 #Define plot styles
-
 plt.style.use('fivethirtyeight')
 plt.rcParams['axes.facecolor']='w'
 plt.rcParams['figure.facecolor']='w'
@@ -22,6 +24,7 @@ plt.rcParams['figure.subplot.bottom'] = 0.12
 plt.rcParams['savefig.facecolor']='w'
 plt.rcParams['axes.color_cycle'] = [u'#30a2da', u'#fc4f30', u'#e5ae38',  '#beaed4', '#fdc086']
 
+<<<<<<< HEAD
 
 #Dictionary data frame
 # Load the data dictionary
@@ -185,6 +188,8 @@ subcats = [subcat_height, subcat_gender, subcat_experience, subcat_champ, subcat
 subcat_names = ['height', 'gender', 'experience', 'champ', 'repeat', 'cm', 'national']
 
 
+=======
+>>>>>>> fc9f3b11d14d02899f095d4b5f15315471541a47
 #What locations can be smaller?
 smaller = (df.ix[:, dic['Aspect']=='smaller']=='Yes')
 smaller.columns = ['Airlock', 'Galley', 'Sleep', 'Storage', 'Command', 'Science', 'ECLSS',
@@ -192,8 +197,8 @@ smaller.columns = ['Airlock', 'Galley', 'Sleep', 'Storage', 'Command', 'Science'
 (100*smaller.mean(0))[np.argsort(smaller.mean(0))].plot(kind='barh', stacked=True)
 plt.subplots_adjust(left=0.3)
 plt.xlabel('% Yes')
-plt.title('\n'.join(wrap("Could the volume of the following spaces be smaller "+ 
-							"and still acceptable for the tasks you performed?", 70)), 
+plt.title('\n'.join(wrap("Could the volume of the following spaces be smaller "+
+							"and still acceptable for the tasks you performed?", 70)),
 							size='small')
 
 
@@ -221,7 +226,7 @@ for i in np.argsort(np.array(dic['Order_Asked'][mask], int))[1:]:
 	print dic['Location'][mask][i]
 	print dic['Question_Text'][mask][i]
 	tags = tag_matrix.ix[:, mask].ix[:, i]
-	print "Tags: "+'%s, '*tags.sum() % tuple(tags.index.str.lower()[tags])	
+	print "Tags: "+'%s, '*tags.sum() % tuple(tags.index.str.lower()[tags])
 	if dic['Data_type'][mask][i] == 'Ordinal':
 		print dic['Data_values'][mask][i]
 		print "Category\t\tn\tMean\t1\t2\t3\t4\t5\t6\t(4-6)\tp-value"
@@ -263,11 +268,11 @@ for i in np.argsort(np.array(dic['Order_Asked'][mask], int))[1:]:
 				pval = stats.chi2_contingency(obs[:, obs[1]>0])[1]
 			else:
 				pval = np.nan
-			
+
 			print '%21s\t%i' % (category_names[j], total) + '\t%3.1f%%'*len(responsetypes) % tuple(width/total*100)+'\t%3.2f' % (pval)+'*'*(pval < 0.05)
 		print
 	elif (dic['Data_type'][mask][i] == 'Count')*(i > 5):
-		
+
 		responsetypes = np.array(np.unique(subframe.ix[:, i].dropna()), int)
 		print "Category\t\tn\t"+"Mean"+ "\t%s"*len(responsetypes) % tuple(responsetypes)+ "\tp-value"
 		for j in range(len(category_names)):
@@ -281,18 +286,18 @@ for i in np.argsort(np.array(dic['Order_Asked'][mask], int))[1:]:
 	elif (dic['Data_type'][mask][i].lower() == 'free response') or (dic['Data_type'][mask][i] == 'Comment'):
 		for j in range(len(subframe.ix[:, i])):
 			if (subframe.ix[:, i][j] !='NaN') and (subframe.ix[:, i][j]== subframe.ix[:, i][j]):
-				print 
+				print
 				cat_tags = '\t\t'+'%s, '*(categories.ix[j].sum()-1) % tuple(category_names[categories.ix[j]][1:])
-				
+
 				print '\t'+'\n\t'.join(wrap(subframe.ix[:, i][j], 70))
 				print '\n\t\t'.join(wrap(cat_tags, 70))
 	elif (dic['Data_type'][mask][i].lower() == 'multiple selection'):
-		selections = -DataFrame(index=df.index, columns= dic['Data_values'][mask][i].split(';'), 
+		selections = -DataFrame(index=df.index, columns= dic['Data_values'][mask][i].split(';'),
 				dtype=bool)
 		for j in np.where(subframe.ix[:, i]==subframe.ix[:, i])[0]:
 			for k in range(selections.shape[-1]):
 				selections.ix[j, k] =  selections.columns[k] in subframe.ix[:, i][j]
-		
+
 		for j in range(len(selections.columns)):
 			print '%70s\t' % (selections.columns[j]) + '\t%2.1f%%' % (100*selections.mean(0)[j])
 	elif dic['Data_type'][mask][i] == 'Continuous':
@@ -310,15 +315,15 @@ def gauge_chart_ordinal_cross(responses, categories):
 	values = dic['Data_values'][responses.name==dic['Fall_2016_Question_Code']][0]
 	stack = DataFrame(columns=np.arange(1, 7), index=categories.columns)
 	for i in range(categories.shape[-1]):
-		stack.ix[i] = np.histogram(responses[categories.ix[:, i]], 
+		stack.ix[i] = np.histogram(responses[categories.ix[:, i]],
 			np.arange(1, 8), normed=True)[0]
-	(100*stack[::-1].ix[:,  ::-1]).plot(kind='barh', stacked=True, 
-		width=1, edgecolor='w', colors=plt.cm.RdBu_r(np.linspace(0.25, 0.75, 6)), 
+	(100*stack[::-1].ix[:,  ::-1]).plot(kind='barh', stacked=True,
+		width=1, edgecolor='w', colors=plt.cm.RdBu_r(np.linspace(0.25, 0.75, 6)),
 		align='edge', figsize=(12, 6), legend=False)
 	plt.title("\n".join(wrap(dic['Question_Text']\
 			[responses.name==dic['Fall_2016_Question_Code']][0], 88)), size='medium')
 	for i in range(6):
-		plt.axvline(np.cumsum(np.histogram(responses[categories.ix[:, 0]], 
+		plt.axvline(np.cumsum(np.histogram(responses[categories.ix[:, 0]],
 		np.arange(1, 8), normed=True)[0][::-1])[i]*100, color='lightgray')
 	plt.axis('tight')
 	plt.xticks(np.arange(0, 101, 10), ('%i%% '*11 % tuple(np.arange(0, 101, 10))).split())
@@ -327,7 +332,7 @@ def gauge_chart_ordinal_cross(responses, categories):
 	plt.annotate(values.split(';')[1].split('-')[1], (0.28, 0.05), xycoords='figure fraction', ha='right', va='center')
 	plt.annotate(values.split(';')[0].split('-')[1], (0.8, 0.05), xycoords='figure fraction', ha='left', va='center')
 	plt.subplots_adjust(left=0.18)
-	
+
 
 def gauge_chart_categorical_cross(responses, categories):
 	values = dic['Data_values'][responses.name==dic['Fall_2016_Question_Code']][0].split(';')
@@ -335,7 +340,7 @@ def gauge_chart_categorical_cross(responses, categories):
 	for i in range(len(stack)):
 		for j in range(len(stack.T)):
 			stack.ix[i, j] = (np.array(responses[categories.ix[:, i]], str)==values[j]).sum()
-	(100*stack.T/stack.sum(1)).T[::-1].plot(kind='barh', stacked=True, width=1, 
+	(100*stack.T/stack.sum(1)).T[::-1].plot(kind='barh', stacked=True, width=1,
 		edgecolor='w', legend=False, align='edge', figsize=(12, 6))
 	plt.title("\n".join(wrap(dic['Question_Text']\
 			[responses.name==dic['Fall_2016_Question_Code']][0], 88)), size='medium')
@@ -345,7 +350,7 @@ def gauge_chart_categorical_cross(responses, categories):
 	plt.xticks(np.arange(0, 101, 10), ('%i%% '*11 % tuple(np.arange(0, 101, 10))).split())
 	plt.legend(bbox_to_anchor=(0.55, -0.05, 0.5, 0), ncol=len(values), fontsize='small')
 	plt.subplots_adjust(left=0.18, right=0.92)
-	
+
 
 def gauge_chart_categorical_cross(responses, categories):
 	values = dic['Data_values'][responses.name==dic['Fall_2016_Question_Code']][0].split(';')
@@ -353,7 +358,7 @@ def gauge_chart_categorical_cross(responses, categories):
 	for i in range(len(stack)):
 		for j in range(len(stack.T)):
 			stack.ix[i, j] = (np.array(responses[categories.ix[:, i]], str)==values[j]).sum()
-	(100*stack.T/stack.sum(1)).T[::-1].plot(kind='barh', stacked=True, width=1, 
+	(100*stack.T/stack.sum(1)).T[::-1].plot(kind='barh', stacked=True, width=1,
 		edgecolor='w', legend=False, align='edge', figsize=(12, 6))
 	plt.title("\n".join(wrap(dic['Question_Text']\
 			[responses.name==dic['Fall_2016_Question_Code']][0], 88)), size='medium')
