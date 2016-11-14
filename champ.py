@@ -348,7 +348,7 @@ if makefigs:
 			plt.savefig(output_path+"/figs/all/"+'%03i' % i)
 			plt.close()
 			gauge_chart_ordinal_cross(subframe.ix[:, i], DataFrame(categories.All))
-			plt.savefig(output_path+"/figs/all/"+'%03i' % i)
+			plt.savefig(output_path+"/figs/topline/"+'%03i' % i)
 			plt.close()
 			for j in range(len(subcats)):
 				gauge_chart_ordinal_cross(subframe.ix[:, i], subcats[j])
@@ -359,7 +359,7 @@ if makefigs:
 			plt.savefig(output_path+"/figs/all/"+'%03i' % i)
 			plt.close()
 			gauge_chart_categorical_cross(subframe.ix[:, i], DataFrame(categories.All))
-			plt.savefig(output_path+"/figs/all/"+'%03i' % i)
+			plt.savefig(output_path+"/figs/topline/"+'%03i' % i)
 			plt.close()
 			for j in range(len(subcats)):
 				gauge_chart_categorical_cross(subframe.ix[:, i], subcats[j])
