@@ -163,8 +163,10 @@ def gauge_chart_ordinal_cross(responses, categories):
 	plt.xticks(np.arange(0, 101, 10), ('%i%% '*11 % tuple(np.arange(0, 101, 10))).split())
 	#plt.legend(bbox_to_anchor=(0., 1.0, 1.12, -0.25))
 	plt.legend(bbox_to_anchor=(0.3, -0.04, 0.5, 0), ncol=6, fontsize='medium', framealpha=0)
-	plt.annotate(values.split(';')[1].split('-')[1], (0.28, 0.05), xycoords='figure fraction', ha='right', va='center')
-	plt.annotate(values.split(';')[0].split('-')[1], (0.8, 0.05), xycoords='figure fraction', ha='left', va='center')
+	plt.annotate(values.split(';')[1].split('-')[1], (0.28, 0.1), size='small',
+					xycoords='figure fraction', ha='right', va='center')
+	plt.annotate(values.split(';')[0].split('-')[1], (0.8, 0.1), size='small',
+					xycoords='figure fraction', ha='left', va='center')
 	plt.subplots_adjust(left=0.18)
 
 
@@ -259,61 +261,88 @@ def multiple_selection(responses, categories):
 	#	for j in range(len(contin.T)):	
 	#		contin.ix[i, j] =  selections.ix[:, j].T.ix[categories.ix[:, i]].sum()
 	#plt.imshow(contin)
+	
+def gauge_chart_ordinal_top(responses, category):
+	values = dic['Data_values'][responses.name==dic['Fall_2016_Question_Code']][0]
+	stack = DataFrame(index=np.arange(1, 7), columns=[category.name])
+	stack[category.name] = np.histogram(responses[category], np.arange(1, 8), normed=True)[0]
+	(100*stack)[::-1].T.plot(kind='barh', stacked=True, width=1, edgecolor='w', 
+		colors=plt.cm.RdBu_r(np.linspace(0.25, 0.75, 6)), align='edge', 
+		figsize=(12, 3), legend=False)
+	plt.title("\n".join(wrap(dic['Question_Text']\
+			[responses.name==dic['Fall_2016_Question_Code']][0], 60)), size='x-large')
+	plt.axis('tight')
+	plt.yticks(size='x-large')
+	plt.xticks(np.arange(0, 101, 10), ('%i%% '*11 % tuple(np.arange(0, 101, 10))).split())
+	#plt.legend(bbox_to_anchor=(0., 1.0, 1.12, -0.25))
+	plt.legend(bbox_to_anchor=(0.3, -0.3, 0.5, 0), ncol=6, fontsize='medium', framealpha=0)
+	plt.annotate(values.split(';')[1].split('-')[1], (0.28, 0.1), size='small',
+					xycoords='figure fraction', ha='right', va='center')
+	plt.annotate(values.split(';')[0].split('-')[1], (0.8, 0.1), size='small',
+					xycoords='figure fraction', ha='left', va='center')
+	plt.subplots_adjust(left=0.12, bottom=0.3, top=0.7)
 
+
+def gauge_chart_categorical_top(responses, category):
+	values = dic['Data_values'][responses.name==dic['Fall_2016_Question_Code']][0].split(';')
+	stack = pd.Series(index=values)
+	for j in range(len(values)):
+		stack.ix[values[j]]= (np.array(responses[category], str)==values[j]).sum()
+	stack = DataFrame(stack, columns=[category.name])
+	(100*stack/stack.sum()).T.plot(kind='barh', stacked=True, width=1,
+		edgecolor='w', legend=False, align='edge', figsize=(12, 3))	
+	plt.title("\n".join(wrap(dic['Question_Text']\
+			[responses.name==dic['Fall_2016_Question_Code']][0], 60)), size='x-large')
+	plt.axis('tight')
+	plt.yticks(size='x-large')
+	plt.xticks(np.arange(0, 101, 10), ('%i%% '*11 % tuple(np.arange(0, 101, 10))).split())
+	#plt.legend(bbox_to_anchor=(0., 1.0, 1.12, -0.25))
+	plt.legend(bbox_to_anchor=(0.3, -0.3, 0.5, 0), ncol=6, fontsize='medium', framealpha=0)
+	plt.subplots_adjust(left=0.12, bottom=0.3, top=0.7)
 
 
 makefigs = True
 if makefigs:
-	for i in np.argsort(np.array(dic['Order_Asked'][mask], int)):
+	for i in np.argsort(np.array(dic['Order_Asked'][mask], int))[1:]:
+		fignum = np.array(dic['Order_Asked'][mask], int)[i]
 		if dic['Data_type'][mask][i] == 'Ordinal':
 			gauge_chart_ordinal_cross(subframe.ix[:, i], categories)
-			plt.savefig(output_path+"/figs/all/"+'%03i' % i)
+			plt.savefig(output_path+"/figs/all/"+'%03i' % fignum)
 			plt.close()
-			gauge_chart_ordinal_cross(subframe.ix[:, i], DataFrame(categories.All))
-			plt.savefig(output_path+"/figs/topline/"+'%03i' % i)
+			gauge_chart_ordinal_top(subframe.ix[:, i], categories.All)
+			plt.savefig(output_path+"/figs/topline/"+'%03i' % fignum)
 			plt.close()
 			for j in range(len(subcats)):
 				gauge_chart_ordinal_cross(subframe.ix[:, i], subcats[j])
-				plt.savefig(output_path+"/figs/"+subcat_names[j]+'/'+'%03i' % i)
-				plt.close()
-		elif (dic['Data_type'][mask][i] == 'Categorical')+(dic['Data_type'][mask][i] == 'Binary'):
-			gauge_chart_categorical_cross(subframe.ix[:, i], categories)
-			plt.savefig(output_path+"/figs/all/"+'%03i' % i)
-			plt.close()
-			gauge_chart_categorical_cross(subframe.ix[:, i], DataFrame(categories.All))
-			plt.savefig(output_path+"/figs/topline/"+'%03i' % i)
-			plt.close()
-			for j in range(len(subcats)):
-				gauge_chart_categorical_cross(subframe.ix[:, i], subcats[j])
-				plt.savefig(output_path+"/figs/"+subcat_names[j]+'/'+'%03i' % i)
+				plt.savefig(output_path+"/figs/"+subcat_names[j]+'/'+'%03i' % fignum)
 				plt.close()
 		elif (dic['Data_type'][mask][i] == 'Categorical')+\
 				(dic['Data_type'][mask][i] == 'Binary')+\
 				(dic['Data_type'][mask][i] == 'Count'):
 			gauge_chart_categorical_cross(subframe.ix[:, i], categories)
-			plt.savefig(output_path+"/figs/all/"+'%03i' % i)
+			plt.savefig(output_path+"/figs/all/"+'%03i' % fignum)
 			plt.close()
-			gauge_chart_categorical_cross(subframe.ix[:, i], DataFrame(categories.All))
-			plt.savefig(output_path+"/figs/topline/"+'%03i' % i)
+			gauge_chart_categorical_top(subframe.ix[:, i], categories.All)
+			plt.savefig(output_path+"/figs/topline/"+'%03i' % fignum)
 			plt.close()
 			for j in range(len(subcats)):
 				gauge_chart_categorical_cross(subframe.ix[:, i], subcats[j])
-				plt.savefig(output_path+"/figs/"+subcat_names[j]+'/'+'%03i' % i)
+				plt.savefig(output_path+"/figs/"+subcat_names[j]+'/'+'%03i' % fignum)
 				plt.close()
 		elif (dic['Data_type'][mask][i] == 'Continuous'):
 			gauge_chart_box_cross(subframe.ix[:, i], categories)
-			plt.savefig(output_path+"/figs/all/"+'%03i' % i)
+			plt.savefig(output_path+"/figs/all/"+'%03i' % fignum)
 			plt.close()
 			histogram_topline(subframe.ix[:, i])
-			plt.savefig(output_path+"/figs/topline/"+'%03i' % i)
+			plt.savefig(output_path+"/figs/topline/"+'%03i' % fignum)
 			plt.close()
 			for j in range(len(subcats)):
 				gauge_chart_box_cross(subframe.ix[:, i], subcats[j])
-				plt.savefig(output_path+"/figs/"+subcat_names[j]+'/'+'%03i' % i)
+				plt.savefig(output_path+"/figs/"+subcat_names[j]+'/'+'%03i' % fignum)
 				plt.close()
 		elif (dic['Data_type'][mask][i].lower() == 'multiple selection'):
 			multiple_selection(subframe.ix[:, i], categories)
-			plt.savefig(output_path+"/figs/topline/"+'%03i' % i)
+			plt.savefig(output_path+"/figs/topline/"+'%03i' % fignum)
 			plt.close()
 
 
