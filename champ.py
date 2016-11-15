@@ -184,14 +184,16 @@ def gauge_chart_categorical_cross(responses, categories):
 	plt.xticks(np.arange(0, 101, 10), ('%i%% '*11 % tuple(np.arange(0, 101, 10))).split())
 	plt.legend(bbox_to_anchor=(0.55, -0.05, 0.5, 0), ncol=len(values), fontsize='small')
 	plt.subplots_adjust(left=0.18, right=0.92)
-
-
-def gauge_chart_categorical_cross(responses, categories):
+	
+def gauge_chart_histogram_cross(responses, categories):
 	values = dic['Data_values'][responses.name==dic['Fall_2016_Question_Code']][0].split(';')
-	stack = DataFrame(columns=values, index=categories.columns)
+	description = responses.describe()
+	h = 2*(description['75%']-description['25%'])/np.power(description['count'], 1./3.)
+	nbins = np.round((description['max']-description['min'])/h)
+	bins = np.histogram(responses, nbins)[1]
+	stack = DataFrame(columns=np.arange(nbins), index=categories.columns)
 	for i in range(len(stack)):
-		for j in range(len(stack.T)):
-			stack.ix[i, j] = (np.array(responses[categories.ix[:, i]], str)==values[j]).sum()
+		stack.ix[i] = np.histogram(responses[categories.ix[:, i]], bins)[0]
 	(100*stack.T/stack.sum(1)).T[::-1].plot(kind='barh', stacked=True, width=1,
 		edgecolor='w', legend=False, align='edge', figsize=(12, 6))
 	plt.title("\n".join(wrap(dic['Question_Text']\
@@ -202,6 +204,62 @@ def gauge_chart_categorical_cross(responses, categories):
 	plt.xticks(np.arange(0, 101, 10), ('%i%% '*11 % tuple(np.arange(0, 101, 10))).split())
 	plt.legend(bbox_to_anchor=(0.55, -0.05, 0.5, 0), ncol=len(values), fontsize='small')
 	plt.subplots_adjust(left=0.18, right=0.92)
+	
+def gauge_chart_box_cross(responses, categories):
+	values = dic['Data_values'][responses.name==dic['Fall_2016_Question_Code']][0]
+	stack = DataFrame(columns=np.arange(len(responses)), index=categories.columns)
+	for i in range(len(stack)):
+			stack.ix[i][ categories.ix[:, i]] = responses[categories.ix[:, i]]
+	if not (categories.ix[:, 1:].sum(1)==categories.ix[:, 0]).all():
+		stack[::-1].T.plot(kind='box', vert=False,legend=False, figsize=(12, 6), grid=True)
+	else:
+		stack.ix[1:, ::-1].T.plot(kind='hist', legend=False, normed=True,
+						 figsize=(12, 6), grid=True, histtype='step', lw=3)
+		plt.legend(loc=0, ncol=len(values), fontsize='medium')
+	plt.title("\n".join(wrap(dic['Question_Text']\
+			[responses.name==dic['Fall_2016_Question_Code']][0], 88)), size='medium')
+	#for i in range(len(stack.T)):
+	#	plt.axvline(np.cumsum((stack.T/stack.sum(1)).T.ix[0])[::-1][i]*100, color='lightgray')
+	#plt.axis('tight')
+	#plt.xticks(np.arange(0, 101, 10), ('%i%% '*11 % tuple(np.arange(0, 101, 10))).split())
+	#plt.legend(bbox_to_anchor=(0.55, -0.05, 0.5, 0), ncol=len(values), fontsize='small')
+	plt.subplots_adjust(left=0.18)
+	plt.xlabel(values)
+	
+def histogram_topline(responses):
+	values = dic['Data_values'][responses.name==dic['Fall_2016_Question_Code']][0]
+	responses[::-1].T.plot(kind='hist', legend=False, normed=True,
+						 figsize=(12, 6), grid=True)
+	plt.title("\n".join(wrap(dic['Question_Text']\
+			[responses.name==dic['Fall_2016_Question_Code']][0], 88)), size='medium')
+	#for i in range(len(stack.T)):
+	#	plt.axvline(np.cumsum((stack.T/stack.sum(1)).T.ix[0])[::-1][i]*100, color='lightgray')
+	plt.axis('tight')
+	#plt.xticks(np.arange(0, 101, 10), ('%i%% '*11 % tuple(np.arange(0, 101, 10))).split())
+	#plt.legend(bbox_to_anchor=(0.55, -0.05, 0.5, 0), ncol=len(values), fontsize='small')
+	#plt.subplots_adjust(left=0.18, right=0.92)
+	plt.xlabel(values)
+	
+def multiple_selection(responses, categories):
+	values = dic['Data_values'][responses.name==dic['Fall_2016_Question_Code']][0].split(';')
+	selections = -DataFrame(index=df.index, columns= values,
+			dtype=bool)
+	for i in np.where(responses==responses)[0]:
+		for j in range(selections.shape[-1]):
+			selections.ix[i, j] =  selections.columns[j] in responses[i]
+	(100*selections.mean(0)[::-1]).plot(kind='barh', figsize=(10, 10))
+	plt.yticks(np.arange(len(values)), [ '\n'.join(wrap(label, 50)) for label in values[::-1]],
+				size='small')
+	plt.subplots_adjust(left=0.45)
+	#plt.tight_layout()
+	plt.xlabel("%")
+	
+	#contin = DataFrame(index=categories.columns, columns= selections.columns)
+	#for i in range(len(contin)):
+	#	for j in range(len(contin.T)):	
+	#		contin.ix[i, j] =  selections.ix[:, j].T.ix[categories.ix[:, i]].sum()
+	#plt.imshow(contin)
+
 
 
 makefigs = True
@@ -229,7 +287,9 @@ if makefigs:
 				gauge_chart_categorical_cross(subframe.ix[:, i], subcats[j])
 				plt.savefig(output_path+"/figs/"+subcat_names[j]+'/'+'%03i' % i)
 				plt.close()
-		elif (dic['Data_type'][mask][i] == 'Categorical')+(dic['Data_type'][mask][i] == 'Binary'):
+		elif (dic['Data_type'][mask][i] == 'Categorical')+\
+				(dic['Data_type'][mask][i] == 'Binary')+\
+				(dic['Data_type'][mask][i] == 'Count'):
 			gauge_chart_categorical_cross(subframe.ix[:, i], categories)
 			plt.savefig(output_path+"/figs/all/"+'%03i' % i)
 			plt.close()
@@ -240,6 +300,21 @@ if makefigs:
 				gauge_chart_categorical_cross(subframe.ix[:, i], subcats[j])
 				plt.savefig(output_path+"/figs/"+subcat_names[j]+'/'+'%03i' % i)
 				plt.close()
+		elif (dic['Data_type'][mask][i] == 'Continuous'):
+			gauge_chart_box_cross(subframe.ix[:, i], categories)
+			plt.savefig(output_path+"/figs/all/"+'%03i' % i)
+			plt.close()
+			histogram_topline(subframe.ix[:, i])
+			plt.savefig(output_path+"/figs/topline/"+'%03i' % i)
+			plt.close()
+			for j in range(len(subcats)):
+				gauge_chart_box_cross(subframe.ix[:, i], subcats[j])
+				plt.savefig(output_path+"/figs/"+subcat_names[j]+'/'+'%03i' % i)
+				plt.close()
+		elif (dic['Data_type'][mask][i].lower() == 'multiple selection'):
+			multiple_selection(subframe.ix[:, i], categories)
+			plt.savefig(output_path+"/figs/topline/"+'%03i' % i)
+			plt.close()
 
 
 sys.exit()
