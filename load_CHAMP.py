@@ -118,7 +118,7 @@ categories['Space Experience'] = np.copy(experience.ix[:, [7, 8, 9, 10, 11, 12]]
 categories['Expert'] = np.copy(experience.sum(1)>=3)
 categories['Any Experience'] = np.copy(experience.sum(1)>0)
 categories['No Experience'] = np.copy(experience.sum(1)==0)
-categories['US National'] = df.crew_national.str.count("United|America|USA|US|United States|U.S.") > 0
+categories['US National'] = df.crew_national.str.count("United|America|USA|US|United States|U.S.|us|usa") > 0
 categories['International'] = -categories['US National']
 categories['30 and older'] = np.copy(df.crew_age>= 30)
 categories['Under 30'] = np.copy(df.crew_age< 30)
