@@ -103,9 +103,17 @@ tags[3] = 'Location'
 tag_matrix.index = tags
 
 # Standardize the majors given
+standard_major = pd.Series(index=range(len(df)))
 for i in range(0, df.shape[0]):
-	df.iloc[i]["crew_major"] = cf.standard_major(df.iloc[i]["crew_major"])
+	standard_major.ix[i] = cf.standard_major(df.iloc[i]["crew_major"])
+	
+#Classify by gender
 
+gender_ratio_test = pd.Series(index=df.crew_test.unique())
+gender_ratio_data = pd.Series(index=df.index)
+for i in gender_ratio.index:
+	gender_ratio_test[i] = (df.crew_gender[df.crew_test==i]=='Male').mean()
+	gender_ratio_data[df.crew_test==i] = gender_ratio_test[i]
 
 #Categorize participants
 categories = DataFrame(index=np.arange(len(df)))
@@ -138,6 +146,10 @@ categories['New Participant'] = np.copy(df.crew_prior=='No')
 categories['Repeat Participant'] = np.copy(df.crew_prior=='Yes, in Spring 2016')
 categories['CHAMP'] = np.copy((df.crew_champ=='Yes (former)')+(df.crew_champ=='Yes (current)'))
 categories['Non-CHAMP'] = np.copy(df.crew_champ=='No')
+
+categories['Mixed Gender'] = np.copy((gender_ratio_data % 1) !=0)
+categories['All Male'] = np.copy(gender_ratio_data ==1)
+
 categories['CM1'] = np.copy(df.crew_id==1)
 categories['CM2'] = np.copy(df.crew_id==2)
 categories['CM3'] = np.copy(df.crew_id==3)
