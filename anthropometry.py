@@ -24,5 +24,6 @@ for i in range(3):
         	plt.legend(loc=2, fontsize='small')
     plt.subplots_adjust(hspace=0.5, wspace=0.3, left=0.1)
 
+plt.savefig("../results/figs/anthropometry_bias")
 
 plt.close()
