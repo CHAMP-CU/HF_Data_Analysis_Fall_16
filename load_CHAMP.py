@@ -4,10 +4,18 @@
 # Modified: 20161114
 
 import numpy as np
-import champ_funcs as cf
-import pandas as pd
+import matplotlib.pyplot as plt
+from textblob import TextBlob
 from pandas import DataFrame
+import pandas as pd
+import matplotlib
+import json
+from textwrap import wrap
+from scipy import stats
 import re
+import sys
+import champ_funcs as cf
+
 
 
 #Dictionary data frame
@@ -84,7 +92,22 @@ for i in range(len(df.T)):
 			exclude[(df.crew_test==test)*(df.crew_test==crew), i] = True
 df = df.mask(exclude*(datatype!=np.object), try_cast=True)
 
-#Ad-hoc data corrections go here
+#===Ad-hoc data corrections go here===
+#	Always justify corrections to the data
+
+#T17CM4 swapped bideltoid breadth and thumb-tip reach
+thumb = df.crew_shoulder.ix[(df.crew_id==4)*(df.crew_test==17)]
+shoulder = df.crew_thumb.ix[(df.crew_id==4)*(df.crew_test==17)]
+df.crew_shoulder.ix[(df.crew_id==4)*(df.crew_test==17)] = shoulder
+df.crew_thumb.ix[(df.crew_id==4)*(df.crew_test==17)] = thumb
+
+#T05CM1 entered his height as 59 instead of 69 inches
+df.crew_height.ix[(df.crew_id==1)*(df.crew_test==5)] += 10
+
+#Corbin Cowan entered the wrong Crew Member ID
+df.crew_id[df.crew_name=='Corbin Cowan'] = 3
+
+#=== End ad-hoc corrections ===
 
 #Classify participant experience
 experience = -DataFrame(index=df.index, columns= dic['Data_values'][13].split(';'),
@@ -111,7 +134,7 @@ for i in range(0, df.shape[0]):
 
 gender_ratio_test = pd.Series(index=df.crew_test.unique())
 gender_ratio_data = pd.Series(index=df.index)
-for i in gender_ratio.index:
+for i in gender_ratio_test.index:
 	gender_ratio_test[i] = (df.crew_gender[df.crew_test==i]=='Male').mean()
 	gender_ratio_data[df.crew_test==i] = gender_ratio_test[i]
 

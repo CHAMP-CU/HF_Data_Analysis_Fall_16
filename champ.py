@@ -67,8 +67,8 @@ for i in np.argsort(np.array(dic['Order_Asked'][mask], int))[1:]:
 		for j in range(len(category_names)):
 			width = np.zeros(6)
 			total = subframe.ix[:, i].ix[categories.ix[:, j]].valid().count()
-			for k in range(6):
-				width[k] = (subframe.ix[:, i].ix[categories.ix[:, j]]==(k+1)).mean()*1.
+			width = np.histogram(subframe.ix[:, i].ix[categories.ix[:, j]],
+							np.arange(1, 8), normed=True)[0]
 			pval = stats.ranksums(subframe.ix[:, i].ix[categories.ix[:, j]].dropna(), subframe.ix[:, i].ix[-categories.ix[:, j]].dropna())[1]
 			print '%21s\t%i' % (category_names[j], total) + '\t%2.1f' % (subframe.ix[:, i].ix[categories.ix[:, j]]).mean() + '\t%3.1f%%'*6 % tuple(width*100)+'\t%3.1f%%' % (width[3:].sum()*100) +'\t%3.2f' % (pval)+'*'*(pval < 0.05)
 		print
@@ -346,4 +346,7 @@ if makefigs:
 			plt.close()
 
 
+
+    
+        
 sys.exit()
