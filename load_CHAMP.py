@@ -125,11 +125,6 @@ tags = np.array(tag_matrix.index)
 tags[3] = 'Location'
 tag_matrix.index = tags
 
-# Standardize the majors given
-standard_major = pd.Series(index=range(len(df)))
-for i in range(0, df.shape[0]):
-	standard_major.ix[i] = cf.standard_major(df.iloc[i]["crew_major"])
-	
 #Classify by gender
 
 gender_ratio_test = pd.Series(index=df.crew_test.unique())
