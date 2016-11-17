@@ -12,7 +12,7 @@ for i in range(3):
     	anth = [df.crew_height, df.crew_shoulder, df.crew_thumb][i][subcat_gender.ix[:, j+1]]
     	anth.hist(normed=True, label='Test Data')
         (ansur[j][pars[i]]/25.4).hist(normed=True, histtype='step', lw=3, label='ANSUR Ref. Data')
-        plt.title(['Male', 'Female'][j]+' '+['Stature', 'Bideltoid Breadth', 'Thump-tip Reach'][i])
+        plt.title(['Male', 'Female'][j]+' '+['Stature', 'Bideltoid Breadth', 'Thumb-tip Reach'][i])
         stat, pval=   stats.ttest_ind(anth, ansur[j][pars[i]]/25.4)
         bias = anth.mean()-(ansur[j][pars[i]]/25.4).mean()
         plt.annotate('Bias: %3.1f $\pm$ %3.1f in \np-value: %3.2f' % (bias, bias/stat, pval), (1, 1), 
