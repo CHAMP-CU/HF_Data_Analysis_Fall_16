@@ -16,6 +16,17 @@ import re
 import sys
 import champ_funcs as cf
 
+#Define plot styles
+
+plt.style.use('fivethirtyeight')
+plt.rcParams['axes.facecolor']='w'
+plt.rcParams['figure.facecolor']='w'
+plt.rcParams['axes.edgecolor']='w'
+plt.rcParams['axes.grid']=False
+plt.rcParams['figure.subplot.bottom'] = 0.12
+plt.rcParams['savefig.facecolor']='w'
+plt.rcParams['axes.color_cycle'] = [u'#30a2da', u'#fc4f30', u'#e5ae38',  '#beaed4', '#fdc086']
+
 
 
 #Dictionary data frame
@@ -154,10 +165,10 @@ ansur_m = np.array([76.6, 22.1, 35.8])
 above = (df.crew_height > ansur_m[0])+(df.crew_shoulder > ansur_m[1])+(df.crew_thumb > ansur_m[2])
 below = (df.crew_height < ansur_f[0])+(df.crew_shoulder < ansur_f[1])+(df.crew_thumb < ansur_f[2])
 #categories['Above Limits'] = np.copy(above)
-categories['First Quartile'] = df.crew_height <= 63.
-categories['Second Quartile'] = (df.crew_height > 63.)*(df.crew_height <= 67.)
-categories['Third Quartile'] = (df.crew_height > 67.)*(df.crew_height <= 71.)
-categories['Fourth Quartile'] = (df.crew_height > 71.)
+categories['First Quartile'] = df.crew_height <= 64.
+categories['Second Quartile'] = (df.crew_height > 64.)*(df.crew_height <= 66.6)
+categories['Third Quartile'] = (df.crew_height > 66.6)*(df.crew_height <= 69.3)
+categories['Fourth Quartile'] = (df.crew_height > 69.3)
 
 #categories['Below Limits'] = np.copy(below)
 categories['New Participant'] = np.copy(df.crew_prior=='No')
@@ -165,8 +176,8 @@ categories['Repeat Participant'] = np.copy(df.crew_prior=='Yes, in Spring 2016')
 categories['CHAMP'] = np.copy((df.crew_champ=='Yes (former)')+(df.crew_champ=='Yes (current)'))
 categories['Non-CHAMP'] = np.copy(df.crew_champ=='No')
 
-categories['Mixed Gender'] = np.copy((gender_ratio_data % 1) !=0)
-categories['All Male'] = np.copy(gender_ratio_data ==1)
+#categories['Mixed Gender'] = np.copy((gender_ratio_data % 1) !=0)
+#categories['All Male'] = np.copy(gender_ratio_data ==1)
 
 categories['CM1'] = np.copy(df.crew_id==1)
 categories['CM2'] = np.copy(df.crew_id==2)

@@ -34,7 +34,8 @@ plt.xlabel('% Yes')
 plt.title('\n'.join(wrap("Could the volume of the following spaces be smaller "+
 							"and still acceptable for the tasks you performed?", 70)),
 							size='small')
-
+plt.savefig("../results/figs/smaller")
+plt.close()
 
 
 ### This part was removed because we don't have a seperate free response form
@@ -163,9 +164,9 @@ def gauge_chart_ordinal_cross(responses, categories):
 	plt.xticks(np.arange(0, 101, 10), ('%i%% '*11 % tuple(np.arange(0, 101, 10))).split())
 	#plt.legend(bbox_to_anchor=(0., 1.0, 1.12, -0.25))
 	plt.legend(bbox_to_anchor=(0.3, -0.04, 0.5, 0), ncol=6, fontsize='medium', framealpha=0)
-	plt.annotate(values.split(';')[1].split('-')[1], (0.28, 0.1), size='small',
+	plt.annotate(values.split(';')[1].split('-')[1], (0.28, 0.04), size='small',
 					xycoords='figure fraction', ha='right', va='center')
-	plt.annotate(values.split(';')[0].split('-')[1], (0.8, 0.1), size='small',
+	plt.annotate(values.split(';')[0].split('-')[1], (0.8, 0.04), size='small',
 					xycoords='figure fraction', ha='left', va='center')
 	plt.subplots_adjust(left=0.18)
 
@@ -343,10 +344,6 @@ if makefigs:
 		elif (dic['Data_type'][mask][i].lower() == 'multiple selection'):
 			multiple_selection(subframe.ix[:, i], categories)
 			plt.savefig(output_path+"/figs/topline/"+'%03i' % fignum)
-			plt.close()
-
-
-
-    
+			plt.close() 
         
 sys.exit()
