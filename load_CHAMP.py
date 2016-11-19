@@ -26,7 +26,7 @@ plt.rcParams['axes.grid']=False
 plt.rcParams['figure.subplot.bottom'] = 0.12
 plt.rcParams['savefig.facecolor']='w'
 plt.rcParams['axes.color_cycle'] = [u'#30a2da', u'#fc4f30', u'#e5ae38',  '#beaed4', '#fdc086']
-
+plt.rcParams.update({'figure.autolayout': True})
 
 
 #Dictionary data frame
@@ -130,11 +130,43 @@ for i in range(len(df)):
 		experience.ix[i, j] =  experience.columns[j] in df.crew_experience[i]
 
 
+#Classify questions by tag and location
+
 tag_matrix = (DataFrame(dic).ix[:, -11:] =='1').T
 tag_matrix.columns = df.columns
 tags = np.array(tag_matrix.index)
 tags[3] = 'Location'
 tag_matrix.index = tags
+
+loc_matrix =  pd.get_dummies(dic['Location']).astype(bool)
+loc_tag = (loc_matrix.astype(int).T.dot(np.matrix(tag_matrix).T))
+loc_tag.index = ['Auxiliary', 'Airlock', 'Command', 'ECLSS', 
+				'Emergency', 'Exercise', 'Galley', 'Habitat', 
+				'Hatches', 'Hygiene', 'ICH', 'Science', 'Sleep Stations', 
+				'Storage', 'Technology Development', 'Windows']
+loc_tag.columns = tag_matrix.index
+plt.figure(figsize=(8, 8))
+plt.imshow(loc_tag.ix[:, :8], interpolation='nearest', cmap=plt.cm.Blues)
+plt.gca().xaxis.tick_top()
+plt.xticks(np.arange(8), loc_tag.columns, rotation=90)
+plt.yticks(np.arange(len(loc_tag)), loc_tag.index)
+plt.colorbar(label='Number of questions', format='%i')
+plt.savefig('../results/figs/question_breakdown')
+
+plt.close()
+
+loc_tag.sum(0).plot('barh')
+plt.xlabel("Number of questions")
+plt.savefig('../results/figs/tag_breakdown')
+plt.close()
+
+loc_tag.sum(1).plot('barh')
+plt.xlabel("Number of questions")
+plt.savefig('../results/figs/loc_breakdown')
+plt.close()
+
+
+
 
 #Classify by gender
 
@@ -165,10 +197,10 @@ ansur_m = np.array([76.6, 22.1, 35.8])
 above = (df.crew_height > ansur_m[0])+(df.crew_shoulder > ansur_m[1])+(df.crew_thumb > ansur_m[2])
 below = (df.crew_height < ansur_f[0])+(df.crew_shoulder < ansur_f[1])+(df.crew_thumb < ansur_f[2])
 #categories['Above Limits'] = np.copy(above)
-categories['First Quartile'] = df.crew_height <= 64.
-categories['Second Quartile'] = (df.crew_height > 64.)*(df.crew_height <= 66.6)
-categories['Third Quartile'] = (df.crew_height > 66.6)*(df.crew_height <= 69.3)
-categories['Fourth Quartile'] = (df.crew_height > 69.3)
+categories['Height <64\"'] = df.crew_height <= 64.
+categories['Height 64-67\"'] = (df.crew_height > 64.)*(df.crew_height <= 66.6)
+categories['Height 67-69\"'] = (df.crew_height > 66.6)*(df.crew_height <= 69.3)
+categories['Height >69\"'] = (df.crew_height > 69.3)
 
 #categories['Below Limits'] = np.copy(below)
 categories['New Participant'] = np.copy(df.crew_prior=='No')
@@ -188,10 +220,10 @@ category_names = categories.columns
 
 #Category classes
 subcat_height = pd.concat([categories['All'],
-							categories['First Quartile'],
-							categories['Second Quartile'],
-							categories['Third Quartile'],
-							categories['Fourth Quartile']], axis=1)
+							categories['Height <64\"'],
+							categories['Height 64-67\"'],
+							categories['Height 67-69\"'],
+							categories['Height >69\"']], axis=1)
 subcat_gender = pd.concat([categories['All'],
 							categories['Male'],  categories['Female']], axis=1)
 subcat_champ = pd.concat([categories['All'],
@@ -212,3 +244,8 @@ subcat_experience = pd.concat([categories['All'], categories['Flight Experience'
 subcats = [subcat_height, subcat_gender, subcat_experience, subcat_champ, subcat_repeat,
 				subcat_cm, subcat_national]
 subcat_names = ['height', 'gender', 'experience', 'champ', 'repeat', 'cm', 'national']
+
+(categories.mean(0)*100)[::-1].plot(kind='barh')
+plt.subplots_adjust(left=0.25)
+plt.savefig('../results/figs/categories')
+
