@@ -10,6 +10,7 @@ from scipy import stats
 import re
 import sys
 import champ_funcs as cf
+import time
 
 # Load the data
 from load_CHAMP import *
@@ -56,6 +57,10 @@ mask+= (dic['Data_type']=="Continuous")'''
 #Exclude questions with fewer than 8 responses
 mask = np.array(df.count(axis=0) > 8)#+(df.sum(0).str.count('NaN') < len(df)-8)
 subframe = df.ix[:, mask]
+
+print time.asctime()
+print '20 tests'
+print '80 participants'
 for i in np.argsort(np.array(dic['Order_Asked'][mask], int))[1:]:
 	print np.array(dic['Order_Asked'][mask], int)[i]
 	print dic['Location'][mask][i]
