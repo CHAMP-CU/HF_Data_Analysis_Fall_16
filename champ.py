@@ -14,6 +14,7 @@ import time
 
 # Load the data
 from load_CHAMP import *
+plt.close('all')
 
 #Define plot styles
 plt.style.use('fivethirtyeight')

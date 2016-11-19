@@ -26,7 +26,7 @@ plt.rcParams['axes.grid']=False
 plt.rcParams['figure.subplot.bottom'] = 0.12
 plt.rcParams['savefig.facecolor']='w'
 plt.rcParams['axes.color_cycle'] = [u'#30a2da', u'#fc4f30', u'#e5ae38',  '#beaed4', '#fdc086']
-plt.rcParams.update({'figure.autolayout': True})
+#plt.rcParams.update({'figure.autolayout': True})
 
 
 #Dictionary data frame
@@ -145,6 +145,9 @@ loc_tag.index = ['Auxiliary', 'Airlock', 'Command', 'ECLSS',
 				'Hatches', 'Hygiene', 'ICH', 'Science', 'Sleep Stations', 
 				'Storage', 'Technology Development', 'Windows']
 loc_tag.columns = tag_matrix.index
+
+plt.rcParams.update({'figure.autolayout': True})
+
 plt.figure(figsize=(8, 8))
 plt.imshow(loc_tag.ix[:, :8], interpolation='nearest', cmap=plt.cm.Blues)
 plt.gca().xaxis.tick_top()
@@ -164,6 +167,9 @@ loc_tag.sum(1).plot('barh')
 plt.xlabel("Number of questions")
 plt.savefig('../results/figs/loc_breakdown')
 plt.close()
+
+plt.rcParams.update({'figure.autolayout': False})
+
 
 
 
