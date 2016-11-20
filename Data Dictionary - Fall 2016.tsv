@@ -24,7 +24,7 @@ crew_thumb	crew_anthropometry_thumbtip_	Thumb-Tip Reach (inches)	Continuous	inch
 activation_hch_locking_01	activation_hch	Rate the operability of the locking mechanism of the hatch leading from the PCM to the HAB	Ordinal	1 - Completely inoperable; 6 - Completely operable	T01	27	activation	hch	locking	1	0	0	0	0	1	1	0	0	0	0	0
 activation_hch_locking_02		Rate the operability of the locking mechanism of the hatch leading from the HAB to the PCM	Ordinal	1 - Completely inoperable; 6 - Completely operable		28	activation	hch	locking	2	0	0	0	0	1	1	0	0	0	0	0
 activation_hch_feedback		Use this space to explain your previous answers or provide additional feedback regarding the hatches	Free response			29	activation	hch	feedback		0	0	0	0	0	1	0	0	0	0	0
-activation_hab_interference		To what extent did the movement of other crew members adversely affect your ability to perform your activation tasks? 	Ordinal	1 - A great deal; 6 - Not at all		30	activation	hab	interference		0	0	0	0	1	1	0	0	0	0	0
+activation_ich_interference		To what extent did the movement of other crew members adversely affect your ability to perform your activation tasks? 	Ordinal	1 - A great deal; 6 - Not at all		30	activation	ich	interference		0	0	0	0	1	1	0	0	0	0	0
 activation_slp_interference		To what degree did the presence of other crew members adversely affect your attempt to configure your sleep station?	Ordinal	2 - A great deal; 6 - Not at all		31	activation	slp	interference		1	1	0	0	1	1	0	0	0	0	0
 activation_ich_feedback		Use this space to explain your previous answers or provide additional feedback for this scenario	Free response			32	activation	ich	feedback		0	0	0	0	0	1	0	0	0	0	0
 morning_slp_overall	morning_sleep_general_	Rate the overall acceptability of the crew sleeping quarters	Ordinal	1 - Completely unacceptable; 6 - Completely acceptable		33	morning	slp	overall		0	0	0	0	0	0	0	0	0	0	0
@@ -153,7 +153,7 @@ crew_champ		Are you a current or former CHAMP team member?	Categorical	No;Yes (c
 review_wdw_volume		To what degree did the presence of windows affect your perception of volume available in the habitat?	Ordinal	1 - Not at all; 6 - A great deal	T01,T02	156	review	wdw	volume		1	0	0	0	0	0	0	0	0	0	0
 review_wdw_size		Rate the acceptability of the size of the windows	Ordinal	1 - Completely unacceptable; 6 - Completely acceptable	T01,T02		review	wdw	size		1	0	0	0	0	0	0	0	0	0	0
 review_wdw_remove		Would the removal of windows reduce the perceived volume of the habitat?	Binary	Yes;No	T01,T02	159	review	wdw	remove		1	0	0	0	0	0	0	0	0	0	0
-review_wdw_location		Rate the acceptability of the locations of the windows	Ordinal	1 - Completely unacceptable; 6 - Completely acceptable	T01,T02	158	review	wdw	location			1	0	0	0	0	1	0	0	0	0
+review_wdw_location		Rate the acceptability of the locations of the windows	Ordinal	1 - Completely unacceptable; 6 - Completely acceptable	T01,T02	158	review	wdw	location		0	1	0	1	0	0	1	0	0	0	0
 review_ich_width		Rate the acceptability of the width of the main habitat corridor	Ordinal	1 - Completely unacceptable; 6 - Completely acceptable	T01,T02	139	review	ich	width		1	1	0	0	0	0	1	0	0	0	0
 review_ich_height		Rate the acceptability of the height of the habitat ceiling (not including exercise and hygiene areas)	Ordinal	1 - Completely unacceptable; 6 - Completely acceptable	T01,T02	140	review	ich	height		1	1	0	0	0	0	1	0	0	0	0
 review_exr_smaller		Could the volume of the following spaces be smaller and still acceptable for the tasks you performed? [Exercise Area]	Binary	Yes;No	T01,T02	151	review	exr	smaller		1	0	0	0	0	0	1	0	0	0	0

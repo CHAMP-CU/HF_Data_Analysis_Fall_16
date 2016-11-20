@@ -39,6 +39,10 @@ plt.title('\n'.join(wrap("Could the volume of the following spaces be smaller "+
 plt.savefig("../results/figs/smaller")
 plt.close()
 
+#Isolate responses that ask for ratings
+rating = pd.Series(dic['Question_Text']).str.contains("(^|\s)(R|r)ate|adversely")
+rating.index = df.columns
+
 
 ### This part was removed because we don't have a seperate free response form
 #"free responses" data frame
@@ -58,6 +62,31 @@ mask+= (dic['Data_type']=="Continuous")'''
 #Exclude questions with fewer than 8 responses
 mask = np.array(df.count(axis=0) > 8)#+(df.sum(0).str.count('NaN') < len(df)-8)
 subframe = df.ix[:, mask]
+
+#Compute interface averages
+plt.rcParams.update({'figure.autolayout': True})
+plt.figure(figsize=(11, 7))
+positive = DataFrame(index=loc_tag.index, columns=loc_tag.columns)
+for i in range(1, 15):   
+    for j in range(8):
+        positive.ix[i, j] = (df.ix[:, rating*mask*(dic['Data_type']=='Ordinal')\
+        					*(dic['Location']==loc_matrix.columns[i])\
+        					*(tag_matrix.ix[j])] > 3).mean().mean()
+        if positive.ix[i, j]==positive.ix[i, j]:
+			if np.abs(positive.ix[i, j]-0.5) > 0.2:
+				textcol ='w'
+			else:
+				textcol = 'k'
+			plt.annotate('%2.0f%%' % (100*positive.ix[i, j]), (i, j), 
+        		va='center', ha='center', size='xx-small', color=textcol)
+plt.imshow(np.array(100*positive.ix[:, :8], float).T, interpolation='nearest', 
+					cmap=plt.cm.RdBu, vmin=0, vmax=100)
+plt.yticks(np.arange(8), loc_tag.columns, rotation=0)
+plt.gca().xaxis.tick_top()
+plt.xticks(np.arange(1, len(loc_tag)), loc_tag.index[1:], rotation=90)
+plt.colorbar(label='% positive (4-6)', format='%2.0f%%',  shrink=0.8)
+plt.rcParams.update({'figure.autolayout': False})
+
 
 print time.asctime()
 print '20 tests'

@@ -141,7 +141,7 @@ tag_matrix.index = tags
 loc_matrix =  pd.get_dummies(dic['Location']).astype(bool)
 loc_tag = (loc_matrix.astype(int).T.dot(np.matrix(tag_matrix).T))
 loc_tag.index = ['Auxiliary', 'Airlock', 'Command', 'ECLSS', 
-				'Emergency', 'Exercise', 'Galley', 'Habitat', 
+				'Emergency', 'Exercise', 'Galley', 
 				'Hatches', 'Hygiene', 'ICH', 'Science', 'Sleep Stations', 
 				'Storage', 'Technology Development', 'Windows']
 loc_tag.columns = tag_matrix.index
@@ -254,4 +254,5 @@ subcat_names = ['height', 'gender', 'experience', 'champ', 'repeat', 'cm', 'nati
 (categories.mean(0)*100)[::-1].plot(kind='barh')
 plt.subplots_adjust(left=0.25)
 plt.savefig('../results/figs/categories')
+plt.close()
 
