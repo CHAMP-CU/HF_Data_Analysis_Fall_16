@@ -69,24 +69,49 @@ plt.figure(figsize=(11, 7))
 positive = DataFrame(index=loc_tag.index, columns=loc_tag.columns)
 for i in range(1, 15):   
     for j in range(8):
-        positive.ix[i, j] = (df.ix[:, rating*mask*(dic['Data_type']=='Ordinal')\
-        					*(dic['Location']==loc_matrix.columns[i])\
-        					*(tag_matrix.ix[j])] > 3).mean().mean()
+        positive.ix[i, j] = (df.ix[:, rating*(mask*(dic['Data_type']=='Ordinal')\
+        					*(dic['Location']==loc_matrix.columns[i]))\
+        					*(tag_matrix.ix[j])].dropna() > 3).mean().mean()
         if positive.ix[i, j]==positive.ix[i, j]:
 			if np.abs(positive.ix[i, j]-0.5) > 0.2:
 				textcol ='w'
 			else:
 				textcol = 'k'
 			plt.annotate('%2.0f%%' % (100*positive.ix[i, j]), (i, j), 
-        		va='center', ha='center', size='xx-small', color=textcol)
+        		va='center', ha='center', size='small', 
+        		color=textcol, weight='bold')
 plt.imshow(np.array(100*positive.ix[:, :8], float).T, interpolation='nearest', 
-					cmap=plt.cm.RdBu, vmin=0, vmax=100)
+					cmap=plt.cm.get_cmap('YlGnBu', 4), vmin=60, vmax=100)
 plt.yticks(np.arange(8), loc_tag.columns, rotation=0)
 plt.gca().xaxis.tick_top()
 plt.xticks(np.arange(1, len(loc_tag)), loc_tag.index[1:], rotation=90)
-plt.colorbar(label='% positive (4-6)', format='%2.0f%%',  shrink=0.8)
+plt.colorbar(label='% positive (4-6)', format='%2.0f%%',  shrink=0.8, 
+			extend='min', ticks=np.arange(60, 101, 10))
+plt.savefig("../results/figs/scorecard", dpi=160)
 plt.rcParams.update({'figure.autolayout': False})
 
+plt.rcParams.update({'figure.autolayout': True})
+plt.figure(figsize=(10, 10))
+for i in range(1, 15):   
+    for j in range(8):
+        if positive.ix[i, j]==positive.ix[i, j]:
+			if np.abs(positive.ix[i, j]-0.5) > 0.2:
+				textcol ='w'
+			else:
+				textcol = 'k'
+			plt.annotate('%2.0f%%' % (100*positive.ix[i, j]), (j, i), 
+        		va='center', ha='center', size='x-small', 
+        		color=textcol, weight='bold')
+plt.imshow(np.array(100*positive.ix[:, :8], float), interpolation='nearest', 
+					cmap=plt.cm.get_cmap('YlGnBu', 4), vmin=60, vmax=100)
+plt.gca().xaxis.tick_top()
+plt.xticks(np.arange(8), loc_tag.columns, rotation=90)
+plt.yticks(np.arange(1, len(loc_tag)), loc_tag.index[1:], rotation=00)
+plt.colorbar(label='% positive (4-6)', format='%2.0f%%',  shrink=0.8, 
+			extend='min', ticks=np.arange(60, 101, 10))
+plt.savefig("../results/figs/scorecard_vertical", dpi=160)
+plt.rcParams.update({'figure.autolayout': False})
+plt.close('all')
 
 print time.asctime()
 print '20 tests'
@@ -99,14 +124,20 @@ for i in np.argsort(np.array(dic['Order_Asked'][mask], int))[1:]:
 	print "Tags: "+'%s, '*tags.sum() % tuple(tags.index.str.lower()[tags])
 	if dic['Data_type'][mask][i] == 'Ordinal':
 		print dic['Data_values'][mask][i]
-		print "Category\t\tn\tMean\t1\t2\t3\t4\t5\t6\t(4-6)\tp-value"
+		print "Category\t\tn\tMean\t1\t2\t3\t4\t5\t6\t(4-6)\tpWilc.\tpBinom."
 		for j in range(len(category_names)):
 			width = np.zeros(6)
 			total = subframe.ix[:, i].ix[categories.ix[:, j]].valid().count()
 			width = np.histogram(subframe.ix[:, i].ix[categories.ix[:, j]],
 							bins=np.arange(1, 8), normed=True)[0]
 			pval = stats.ranksums(subframe.ix[:, i].ix[categories.ix[:, j]].dropna(), subframe.ix[:, i].ix[-categories.ix[:, j]].dropna())[1]
-			print '%21s\t%i' % (category_names[j], total) + '\t%2.1f' % (subframe.ix[:, i].ix[categories.ix[:, j]]).mean() + '\t%3.1f%%'*6 % tuple(width*100)+'\t%3.1f%%' % (width[3:].sum()*100) +'\t%3.2f' % (pval)+'*'*(pval < 0.05)
+			yes = (subframe.ix[:, i].ix[categories.ix[:, j]].dropna() > 3).sum()
+			no = (subframe.ix[:, i].ix[categories.ix[:, j]].dropna() <= 3).sum()
+			p0 = (subframe.ix[:, i].ix[-categories.ix[:, j]].dropna() > 3).mean()
+			pval_binom = stats.binom_test((yes, no), p=p0)
+			pval_comb = stats.combine_pvalues((pval, pval_binom))[1]
+			print '%21s\t%i' % (category_names[j], total) + '\t%2.1f' % (subframe.ix[:, i].ix[categories.ix[:, j]]).mean() + '\t%3.1f%%'*6 % tuple(width*100)+'\t%3.1f%%' % (width[3:].sum()*100) +'\t%3.2f' % (pval)+'*'*(pval < 0.05)+'\t%3.2f' % (pval_binom)+'*'*(pval_binom < 0.05)
+			#print '%21s\t%i' % (category_names[j], total) + '\t%2.1f' % (subframe.ix[:, i].ix[categories.ix[:, j]]).mean() + '\t%3.1f%%'*6 % tuple(width*100) +'\t%3.1f%%' % (width[3:].sum()*100)+'\t%3.2f' % (pval_binom)+'*'*(pval < 0.05)
 		print
 	elif dic['Data_type'][mask][i] == 'Binary':
 		responsetypes = dic['Data_values'][mask][i].split(';')
