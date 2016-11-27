@@ -140,9 +140,9 @@ tag_matrix.index = tags
 
 loc_matrix =  pd.get_dummies(dic['Location']).astype(bool)
 loc_tag = (loc_matrix.astype(int).T.dot(np.matrix(tag_matrix).T))
-loc_tag.index = ['Auxiliary', 'Airlock', 'Command', 'ECLSS', 
-				'Emergency', 'Exercise', 'Galley', 
-				'Hatches', 'Hygiene', 'ICH', 'Science', 'Sleep Stations', 
+loc_tag.index = ['Auxiliary', 'Airlock', 'Command', 'ECLSS',
+				'Emergency', 'Exercise', 'Galley',
+				'Hatches', 'Hygiene', 'ICH', 'Science', 'Sleep Stations',
 				'Storage', 'Technology Development', 'Windows']
 loc_tag.columns = tag_matrix.index
 
@@ -256,3 +256,15 @@ plt.subplots_adjust(left=0.25)
 plt.savefig('../results/figs/categories')
 plt.close()
 
+# Read in the particpant nationalities responses
+birth_nationalities_file = "../participant_birth_nationalities.xlsx"
+current_nationalities_file = "../participant_current_nationalities.xlsx"
+national_identities_file = "../participant_national_identities.xlsx"
+languages_file = "../participant_languages.xlsx"
+majors_file = "../participant_majors.xlsx"
+
+bn_f = pd.read_excel(birth_nationalities_file, header=0)
+cn_f = pd.read_excel(current_nationalities_file, header=0)
+ni_f = pd.read_excel(national_identities_file, header=0)
+l_f = pd.read_excel(languages_file, header=0)
+m_f  = pd.read_excel(majors_file, header=0)
