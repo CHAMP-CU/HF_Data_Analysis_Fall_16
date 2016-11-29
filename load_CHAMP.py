@@ -268,3 +268,14 @@ cn_f = pd.read_excel(current_nationalities_file, header=0)
 ni_f = pd.read_excel(national_identities_file, header=0)
 l_f = pd.read_excel(languages_file, header=0)
 m_f  = pd.read_excel(majors_file, header=0)
+
+# Identify the stem vs non-stem majors_file
+m_f['stem_major'] = (m_f.aerospace_engineering==1) | (m_f.physics==1) | \
+ 	(m_f.math==1) | (m_f.chemical_engineering==1) | \
+	(m_f.biomedical_engineering==1) | (m_f.civil_engineering==1) | \
+	(m_f.electrical_engineering==1) | (m_f.astronomy_astrophysics==1) | \
+	(m_f.geophysics==1) | (m_f.mechanial_engineering==1) | \
+	(m_f.computer_science==1) | (m_f.biology==1) | \
+	(m_f.material_engineering==1)
+
+m_f['non_stem'] = -m_f.stem_major
