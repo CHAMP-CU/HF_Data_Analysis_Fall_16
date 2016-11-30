@@ -30,19 +30,15 @@ plt.close()
 
 
 #Anthropometry, age, experience, response correlations
-corrstr = '\t\t\t\t\t\thgt    shl     rch    age    hrs\n'
+corrstr = '\t\t\t\t\t\tn\thgt    shl     rch    age\n'
 print corrstr
 f= open('../results/tables/correlations.txt', 'w')
-for i in range(175):
-    try:
-		corr_row = '%40s' % dic['Fall_2016_Question_Code'][i]+ '\t'+ '%+0.2f  '*5 % (df.crew_height.corr(df[df >0].ix[:, i], method='spearman'),
-				df.crew_shoulder.corr(df[df >0].ix[:, i], method='spearman'),
-				df.crew_thumb.corr(df[df >0].ix[:, i], method='spearman'),
-				df.crew_age.corr(df[df >0].ix[:, i], method='spearman'),
-				df[df >0].crew_experience.corr(df[df >0].ix[:, i], method='spearman'))
+for i in np.where(dic['Data_type']=='Ordinal')[0]:
+		corr_row = '%40s' % dic['Fall_2016_Question_Code'][i]+ '\t%2i'% df.ix[:, i].count()+ '\t'+ '%+0.2f  '*4 % (df.crew_height.corr(df.ix[:, i], method='spearman'),
+				df.crew_shoulder.corr(df.ix[:, i], method='spearman'),
+				df.crew_thumb.corr(df.ix[:, i], method='spearman'),
+				df.crew_age.corr(df.ix[:, i], method='spearman'))
 		print corr_row
 		corrstr += corr_row+'\n'
-    except:
-        print
 f.write(corrstr)
 f.close()
