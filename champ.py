@@ -67,7 +67,7 @@ subframe = df.ix[:, mask]
 plt.rcParams.update({'figure.autolayout': True})
 plt.figure(figsize=(11, 7))
 positive = DataFrame(index=loc_tag.index, columns=loc_tag.columns)
-for i in range(1, 15):   
+for i in range(1, 15):
     for j in range(8):
         positive.ix[i, j] = (df.ix[:, rating*(mask*(dic['Data_type']=='Ordinal')\
         					*(dic['Location']==loc_matrix.columns[i]))\
@@ -77,37 +77,37 @@ for i in range(1, 15):
 				textcol ='w'
 			else:
 				textcol = 'k'
-			plt.annotate('%2.0f%%' % (100*positive.ix[i, j]), (i, j), 
-        		va='center', ha='center', size='small', 
+			plt.annotate('%2.0f%%' % (100*positive.ix[i, j]), (i, j),
+        		va='center', ha='center', size='small',
         		color=textcol, weight='bold')
-plt.imshow(np.array(100*positive.ix[:, :8], float).T, interpolation='nearest', 
+plt.imshow(np.array(100*positive.ix[:, :8], float).T, interpolation='nearest',
 					cmap=plt.cm.get_cmap('YlGnBu', 4), vmin=60, vmax=100)
 plt.yticks(np.arange(8), loc_tag.columns, rotation=0)
 plt.gca().xaxis.tick_top()
 plt.xticks(np.arange(1, len(loc_tag)), loc_tag.index[1:], rotation=90)
-plt.colorbar(label='% positive (4-6)', format='%2.0f%%',  shrink=0.8, 
+plt.colorbar(label='% positive (4-6)', format='%2.0f%%',  shrink=0.8,
 			extend='min', ticks=np.arange(60, 101, 10))
 plt.savefig("../results/figs/scorecard", dpi=160)
 plt.rcParams.update({'figure.autolayout': False})
 
 plt.rcParams.update({'figure.autolayout': True})
 plt.figure(figsize=(10, 10))
-for i in range(1, 15):   
+for i in range(1, 15):
     for j in range(8):
         if positive.ix[i, j]==positive.ix[i, j]:
 			if np.abs(positive.ix[i, j]-0.5) > 0.2:
 				textcol ='w'
 			else:
 				textcol = 'k'
-			plt.annotate('%2.0f%%' % (100*positive.ix[i, j]), (j, i), 
-        		va='center', ha='center', size='x-small', 
+			plt.annotate('%2.0f%%' % (100*positive.ix[i, j]), (j, i),
+        		va='center', ha='center', size='x-small',
         		color=textcol, weight='bold')
-plt.imshow(np.array(100*positive.ix[:, :8], float), interpolation='nearest', 
+plt.imshow(np.array(100*positive.ix[:, :8], float), interpolation='nearest',
 					cmap=plt.cm.get_cmap('YlGnBu', 4), vmin=60, vmax=100)
 plt.gca().xaxis.tick_top()
 plt.xticks(np.arange(8), loc_tag.columns, rotation=90)
 plt.yticks(np.arange(1, len(loc_tag)), loc_tag.index[1:], rotation=00)
-plt.colorbar(label='% positive (4-6)', format='%2.0f%%',  shrink=0.8, 
+plt.colorbar(label='% positive (4-6)', format='%2.0f%%',  shrink=0.8,
 			extend='min', ticks=np.arange(60, 101, 10))
 plt.savefig("../results/figs/scorecard_vertical", dpi=160)
 plt.rcParams.update({'figure.autolayout': False})
@@ -129,7 +129,8 @@ for i in np.argsort(np.array(dic['Order_Asked'][mask], int))[1:]:
 			width = np.zeros(6)
 			total = subframe.ix[:, i].ix[categories.ix[:, j]].valid().count()
 			width = np.histogram(subframe.ix[:, i].ix[categories.ix[:, j]],
-							bins=np.arange(1, 8), normed=True)[0]
+							bins=np.arange(1, 8), normed=True,
+							range=(subframe.ix[:, i].ix[categories.ix[:, j]].min(), subframe.ix[:, i].ix[categories.ix[:, j]].max()))[0]
 			pval = stats.ranksums(subframe.ix[:, i].ix[categories.ix[:, j]].dropna(), subframe.ix[:, i].ix[-categories.ix[:, j]].dropna())[1]
 			yes = (subframe.ix[:, i].ix[categories.ix[:, j]].dropna() > 3).sum()
 			no = (subframe.ix[:, i].ix[categories.ix[:, j]].dropna() <= 3).sum()
@@ -253,7 +254,7 @@ def gauge_chart_categorical_cross(responses, categories):
 	plt.xticks(np.arange(0, 101, 10), ('%i%% '*11 % tuple(np.arange(0, 101, 10))).split())
 	plt.legend(bbox_to_anchor=(0.55, -0.05, 0.5, 0), ncol=len(values), fontsize='small')
 	plt.subplots_adjust(left=0.18, right=0.92)
-	
+
 def gauge_chart_histogram_cross(responses, categories):
 	values = dic['Data_values'][responses.name==dic['Fall_2016_Question_Code']][0].split(';')
 	description = responses.describe()
@@ -273,7 +274,7 @@ def gauge_chart_histogram_cross(responses, categories):
 	plt.xticks(np.arange(0, 101, 10), ('%i%% '*11 % tuple(np.arange(0, 101, 10))).split())
 	plt.legend(bbox_to_anchor=(0.55, -0.05, 0.5, 0), ncol=len(values), fontsize='small')
 	plt.subplots_adjust(left=0.18, right=0.92)
-	
+
 def gauge_chart_box_cross(responses, categories):
 	values = dic['Data_values'][responses.name==dic['Fall_2016_Question_Code']][0]
 	stack = DataFrame(columns=np.arange(len(responses)), index=categories.columns)
@@ -294,7 +295,7 @@ def gauge_chart_box_cross(responses, categories):
 	#plt.legend(bbox_to_anchor=(0.55, -0.05, 0.5, 0), ncol=len(values), fontsize='small')
 	plt.subplots_adjust(left=0.18)
 	plt.xlabel(values)
-	
+
 def histogram_topline(responses):
 	values = dic['Data_values'][responses.name==dic['Fall_2016_Question_Code']][0]
 	responses[::-1].T.plot(kind='hist', legend=False, normed=True,
@@ -308,7 +309,7 @@ def histogram_topline(responses):
 	#plt.legend(bbox_to_anchor=(0.55, -0.05, 0.5, 0), ncol=len(values), fontsize='small')
 	#plt.subplots_adjust(left=0.18, right=0.92)
 	plt.xlabel(values)
-	
+
 def multiple_selection(responses, categories):
 	values = dic['Data_values'][responses.name==dic['Fall_2016_Question_Code']][0].split(';')
 	selections = -DataFrame(index=df.index, columns= values,
@@ -322,19 +323,19 @@ def multiple_selection(responses, categories):
 	plt.subplots_adjust(left=0.45)
 	#plt.tight_layout()
 	plt.xlabel("%")
-	
+
 	#contin = DataFrame(index=categories.columns, columns= selections.columns)
 	#for i in range(len(contin)):
-	#	for j in range(len(contin.T)):	
+	#	for j in range(len(contin.T)):
 	#		contin.ix[i, j] =  selections.ix[:, j].T.ix[categories.ix[:, i]].sum()
 	#plt.imshow(contin)
-	
+
 def gauge_chart_ordinal_top(responses, category):
 	values = dic['Data_values'][responses.name==dic['Fall_2016_Question_Code']][0]
 	stack = DataFrame(index=np.arange(1, 7), columns=[category.name])
 	stack[category.name] = np.histogram(responses[category], np.arange(1, 8), normed=True)[0]
-	(100*stack)[::-1].T.plot(kind='barh', stacked=True, width=1, edgecolor='w', 
-		colors=plt.cm.RdBu_r(np.linspace(0.25, 0.75, 6)), align='edge', 
+	(100*stack)[::-1].T.plot(kind='barh', stacked=True, width=1, edgecolor='w',
+		colors=plt.cm.RdBu_r(np.linspace(0.25, 0.75, 6)), align='edge',
 		figsize=(12, 3), legend=False)
 	plt.title("\n".join(wrap(dic['Question_Text']\
 			[responses.name==dic['Fall_2016_Question_Code']][0], 60)), size='x-large')
@@ -357,7 +358,7 @@ def gauge_chart_categorical_top(responses, category):
 		stack.ix[values[j]]= (np.array(responses[category], str)==values[j]).sum()
 	stack = DataFrame(stack, columns=[category.name])
 	(100*stack/stack.sum()).T.plot(kind='barh', stacked=True, width=1,
-		edgecolor='w', legend=False, align='edge', figsize=(12, 3))	
+		edgecolor='w', legend=False, align='edge', figsize=(12, 3))
 	plt.title("\n".join(wrap(dic['Question_Text']\
 			[responses.name==dic['Fall_2016_Question_Code']][0], 60)), size='x-large')
 	plt.axis('tight')
@@ -410,6 +411,6 @@ if makefigs:
 		elif (dic['Data_type'][mask][i].lower() == 'multiple selection'):
 			multiple_selection(subframe.ix[:, i], categories)
 			plt.savefig(output_path+"/figs/topline/"+'%03i' % fignum)
-			plt.close() 
-        
+			plt.close()
+
 sys.exit()
