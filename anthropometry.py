@@ -15,7 +15,7 @@ for i in range(3):
 		plt.title(['Male', 'Female'][j]+' '+['Stature', 'Bideltoid Breadth', 'Thumb-tip Reach'][i])
 		stat, pval=   stats.ttest_ind(anth, ansur[j][pars[i]]/25.4)
 		bias = anth.mean()-(ansur[j][pars[i]]/25.4).mean()
-		plt.annotate('Bias: %3.1f $\pm$ %3.1f in \np-value: %3.2f' % (bias, bias/stat, pval), (1, 1), 
+		plt.annotate('Bias: %3.1f $\pm$ %3.1f in \np-value: %3.2f' % (bias, bias/stat, pval), (1, 1),
 					xycoords='axes fraction', va='top', ha='right')
 
 		plt.xlabel("in")
@@ -27,3 +27,22 @@ for i in range(3):
 plt.savefig("../results/figs/anthropometry_bias")
 
 plt.close()
+
+
+#Anthropometry, age, experience, response correlations
+corrstr = '\t\t\t\t\t\thgt    shl     rch    age    hrs\n'
+print corrstr
+f= open('../results/tables/correlations.txt', 'w')
+for i in range(175):
+    try:
+		corr_row = '%40s' % dic['Fall_2016_Question_Code'][i]+ '\t'+ '%+0.2f  '*5 % (df.crew_height.corr(df[df >0].ix[:, i], method='spearman'),
+				df.crew_shoulder.corr(df[df >0].ix[:, i], method='spearman'),
+				df.crew_thumb.corr(df[df >0].ix[:, i], method='spearman'),
+				df.crew_age.corr(df[df >0].ix[:, i], method='spearman'),
+				df[df >0].crew_experience.corr(df[df >0].ix[:, i], method='spearman'))
+		print corr_row
+		corrstr += corr_row+'\n'
+    except:
+        print
+f.write(corrstr)
+f.close()
