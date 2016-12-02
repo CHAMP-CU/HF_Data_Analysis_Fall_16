@@ -5,7 +5,7 @@ from pandas import DataFrame
 import pandas as pd
 import matplotlib
 import json
-from textwrap import wrap
+from textwrap import wrap, fill
 from scipy import stats
 import re
 import sys
