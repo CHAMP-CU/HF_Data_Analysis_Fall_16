@@ -147,7 +147,7 @@ print time.asctime()
 print '20 tests'
 print '80 participants'
 for i in np.argsort(np.array(dic['Order_Asked'][mask], int))[1:]:
-	print np.array(dic['Order_Asked'][mask], int)[i]
+	print 'Q%03i' % np.array(dic['Order_Asked'][mask], int)[i]
 	print dic['Location'][mask][i]
 	print dic['Question_Text'][mask][i]
 	tags = tag_matrix.ix[:, mask].ix[:, i]

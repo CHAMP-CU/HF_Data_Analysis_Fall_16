@@ -172,7 +172,29 @@ plt.rcParams.update({'figure.autolayout': False})
 
 
 
+# Read in the particpant nationalities responses
+birth_nationalities_file = "../participant_birth_nationalities.xlsx"
+current_nationalities_file = "../participant_current_nationalities.xlsx"
+national_identities_file = "../participant_national_identities.xlsx"
+languages_file = "../participant_languages.xlsx"
+majors_file = "../participant_majors.xlsx"
 
+bn_f = pd.read_excel(birth_nationalities_file, header=0)
+cn_f = pd.read_excel(current_nationalities_file, header=0)
+ni_f = pd.read_excel(national_identities_file, header=0)
+l_f = pd.read_excel(languages_file, header=0)
+m_f  = pd.read_excel(majors_file, header=0)
+
+# Identify the stem vs non-stem majors_file
+m_f['stem_major'] = (m_f.aerospace_engineering==1) | (m_f.physics==1) | \
+ 	(m_f.math==1) | (m_f.chemical_engineering==1) | \
+	(m_f.biomedical_engineering==1) | (m_f.civil_engineering==1) | \
+	(m_f.electrical_engineering==1) | (m_f.astronomy_astrophysics==1) | \
+	(m_f.geophysics==1) | (m_f.mechanial_engineering==1) | \
+	(m_f.computer_science==1) | (m_f.biology==1) | \
+	(m_f.material_engineering==1)
+
+m_f['non_stem'] = -m_f.stem_major
 
 #Classify by gender
 
@@ -191,10 +213,11 @@ categories['Flight Experience'] = np.copy(df.crew_flight_01=='Yes')
 categories['Flight Experience'] += np.copy(experience.ix[:, [0, 1, 2, 3, 4, 5, 6, 7]].sum(1) > 0)
 categories['Habitat Experience'] = np.copy(experience.ix[:, [9, 13, 14, 15, 16, 17]].sum(1) > 0)
 categories['Space Experience'] = np.copy(experience.ix[:, [7, 8, 9, 10, 11, 12]].sum(1) > 0)
-categories['Expert'] = np.copy(experience.sum(1)>=3)
+categories['Expert'] = np.copy((experience.sum(1)>=3)*categories['Space Experience'])
 categories['Any Experience'] = np.copy(experience.sum(1)>0)
 categories['No Experience'] = np.copy(experience.sum(1)==0)
 categories['US National'] = df.crew_national.str.count("United|America|USA|US|United States|U.S.|us|usa") > 0
+categories['US National'] += (bn_f['united_states']==1)+(cn_f['united_states']==1)+(ni_f['united_states']==1)
 categories['International'] = -categories['US National']
 categories['30 and older'] = np.copy(df.crew_age>= 30)
 categories['Under 30'] = np.copy(df.crew_age< 30)
@@ -210,7 +233,7 @@ categories['Height >69\"'] = (df.crew_height > 69.3)
 
 #categories['Below Limits'] = np.copy(below)
 categories['New Participant'] = np.copy(df.crew_prior=='No')
-categories['Repeat Participant'] = np.copy(df.crew_prior=='Yes, in Spring 2016')
+categories['Repeat Participant'] = np.copy(df.crew_prior.str.contains('Yes'))
 categories['CHAMP'] = np.copy((df.crew_champ=='Yes (former)')+(df.crew_champ=='Yes (current)'))
 categories['Non-CHAMP'] = np.copy(df.crew_champ=='No')
 
@@ -255,27 +278,3 @@ subcat_names = ['height', 'gender', 'experience', 'champ', 'repeat', 'cm', 'nati
 plt.subplots_adjust(left=0.25)
 plt.savefig('../results/figs/categories')
 plt.close()
-
-# Read in the particpant nationalities responses
-birth_nationalities_file = "../participant_birth_nationalities.xlsx"
-current_nationalities_file = "../participant_current_nationalities.xlsx"
-national_identities_file = "../participant_national_identities.xlsx"
-languages_file = "../participant_languages.xlsx"
-majors_file = "../participant_majors.xlsx"
-
-bn_f = pd.read_excel(birth_nationalities_file, header=0)
-cn_f = pd.read_excel(current_nationalities_file, header=0)
-ni_f = pd.read_excel(national_identities_file, header=0)
-l_f = pd.read_excel(languages_file, header=0)
-m_f  = pd.read_excel(majors_file, header=0)
-
-# Identify the stem vs non-stem majors_file
-m_f['stem_major'] = (m_f.aerospace_engineering==1) | (m_f.physics==1) | \
- 	(m_f.math==1) | (m_f.chemical_engineering==1) | \
-	(m_f.biomedical_engineering==1) | (m_f.civil_engineering==1) | \
-	(m_f.electrical_engineering==1) | (m_f.astronomy_astrophysics==1) | \
-	(m_f.geophysics==1) | (m_f.mechanial_engineering==1) | \
-	(m_f.computer_science==1) | (m_f.biology==1) | \
-	(m_f.material_engineering==1)
-
-m_f['non_stem'] = -m_f.stem_major
