@@ -23,7 +23,7 @@ for i in range(3):
 		stat, pval=   stats.ttest_ind(anth, ansur[j][pars[i]]/25.4)
 		bias = anth.mean()-(ansur[j][pars[i]]/25.4).mean()
 		plt.annotate('Bias: %3.1f $\pm$ %3.1f in \np-value: %3.2f' % (bias, bias/stat, pval), (1, 1),
-					xycoords='axes fraction', va='top', ha='right')
+					xycoords='axes fraction', va='top', ha='right', bbox=dict(boxstyle="round", lw=0, fc='white', alpha=0.75))
 
 		plt.xlabel("in")
 		plt.ylabel("Density (in$^{-1}$)")
@@ -36,20 +36,20 @@ for i in range(3):
 		plt.axvline([58.5,14.9,25.6][i], linestyle='-', color=orioncol, lw=2)
 		plt.axvline([76.6,22.1,35.8][i], linestyle='-', color=orioncol, lw=2)
 
-		plt.annotate('5th pct. Japanese female',
-					(stats.norm.ppf(0.05, jf[0, i], jf[1, i]), 0.12),
+		plt.annotate('5th pct. \nJapanese female',
+					(stats.norm.ppf(0.05, jf[0, i], jf[1, i]), 0.125),
 					va='top', ha='left', rotation=0, color='w',
-					size='small', weight='bold', bbox=dict(boxstyle="round", lw=0, fc=isscol, alpha=0.75))
-		plt.annotate('95th pct. American male',
-					(stats.norm.ppf(0.95, am[0, i], am[1, i]), 0.17),
+					size='small', weight='bold', bbox=dict(boxstyle="round", lw=0, fc=isscol, alpha=0.5))
+		plt.annotate('95th pct. \nAmerican male',
+					(stats.norm.ppf(0.95, am[0, i], am[1, i]), 0.08),
 					va='top', ha='right', rotation=0, color='w',
-					size='small', weight='bold', bbox=dict(boxstyle="round", lw=0, fc=isscol, alpha=0.75))
-		plt.annotate('Orion Upper Limit', ([76.6,22.1,35.8][i], 0.10),
+					size='small', weight='bold', bbox=dict(boxstyle="round", lw=0, fc=isscol, alpha=0.5))
+		plt.annotate('Orion Upper Limit', ([76.6,22.1,35.8][i], 0.14),
 					va='bottom', ha='right', rotation=0, color='w',
-					size='small', weight='bold', bbox=dict(boxstyle="round", lw=0, fc=orioncol, alpha=0.75))
-		plt.annotate('Orion Lower Limit', ([58.5,14.9,25.6][i], 0.05),
+					size='small', weight='bold', bbox=dict(boxstyle="round", lw=0, fc=orioncol, alpha=0.5))
+		plt.annotate('Orion Lower Limit', ([58.5,14.9,25.6][i], 0.17),
 					va='bottom', ha='left', rotation=0, color='w',
-					size='small', weight='bold', bbox=dict(boxstyle="round", lw=0, fc=orioncol, alpha=0.75))
+					size='small', weight='bold', bbox=dict(boxstyle="round", lw=0, fc=orioncol, alpha=0.5))
     if i ==1:
         	plt.xlim(13, 23)
     plt.subplots_adjust(left=0.15, bottom=0.1, hspace=0.33)
