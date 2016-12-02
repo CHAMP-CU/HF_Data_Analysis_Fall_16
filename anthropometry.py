@@ -4,8 +4,15 @@ ansur_men = pd.read_csv('ansur_men.txt', delimiter='\t')
 ansur_women = pd.read_csv('ansur_women.txt', delimiter='\t')
 pars = ['STATURE', 'BIDELTOID_BRTH', 'THUMB-TIP_REACH']
 
+orioncol = 'orange'
+isscol = 'coral'
+jf = np.array([[61.8, 15.3, 28.2],
+				[1.9454,	0.7903,	1.5198]])
+am = np.array([[70.8,	19.3,	32.1],
+				[2.4318,	1.0335,	1.5806]])
+
 ansur = [ansur_men, ansur_women]
-plt.figure(figsize=(10, 10))
+plt.figure(figsize=(15, 15))
 for i in range(3):
     for j in range(2):
 		plt.subplot(3, 2, 2*(i+1)+j-1)
@@ -23,6 +30,29 @@ for i in range(3):
 		if 2*(i+1)+j-1==1:
 			plt.legend(loc=2, fontsize='small')
 		plt.subplots_adjust(hspace=0.5, wspace=0.3, left=0.1)
+        #mark orion and iss limits
+    plt.axvline([58.6, 14.0, 25.7][i], linestyle='-', color=isscol, lw=2)
+    plt.axvline([74.8, 20.9, 34.7][i], linestyle='-', color=isscol, lw=2)
+    plt.axvline([58.5,14.9,25.6][i], linestyle='-', color=orioncol, lw=2)
+    plt.axvline([76.6,22.1,35.8][i], linestyle='-', color=orioncol, lw=2)
+
+    plt.annotate('5th pct. Japanese female',
+                (stats.norm.ppf(0.05, jf[0, i], jf[1, i]), 0.12),
+        		va='top', ha='left', rotation=0, color='w',
+        		size='small', weight='bold', bbox=dict(boxstyle="round", lw=0, fc=isscol, alpha=0.75))
+    plt.annotate('95th pct. American male',
+        		(stats.norm.ppf(0.95, am[0, i], am[1, i]), 0.17),
+        		va='top', ha='right', rotation=0, color='w',
+        		size='small', weight='bold', bbox=dict(boxstyle="round", lw=0, fc=isscol, alpha=0.75))
+    plt.annotate('Orion Upper Limit', ([76.6,22.1,35.8][i], 0.10),
+        		va='bottom', ha='right', rotation=0, color='w',
+        		size='small', weight='bold', bbox=dict(boxstyle="round", lw=0, fc=orioncol, alpha=0.75))
+    plt.annotate('Orion Lower Limit', ([58.5,14.9,25.6][i], 0.05),
+        		va='bottom', ha='left', rotation=0, color='w',
+        		size='small', weight='bold', bbox=dict(boxstyle="round", lw=0, fc=orioncol, alpha=0.75))
+    if i ==1:
+        	plt.xlim(13, 23)
+    plt.subplots_adjust(left=0.15, bottom=0.1, hspace=0.33)
 
 plt.savefig("../results/figs/anthropometry_bias")
 
