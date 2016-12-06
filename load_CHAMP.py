@@ -276,5 +276,17 @@ subcat_names = ['height', 'gender', 'experience', 'champ', 'repeat', 'cm', 'nati
 
 (categories.mean(0)*100)[::-1].plot(kind='barh')
 plt.subplots_adjust(left=0.25)
+plt.xlabel("%")
 plt.savefig('../results/figs/categories')
+plt.close()
+
+plt.figure(figsize=(10, 10))
+plt.imshow(np.ma.masked_values(categories.T.dot(categories.astype(int))/categories.sum(), 0), 
+			interpolation='nearest', cmap=plt.cm.Reds)
+plt.yticks(np.arange(25), category_names)
+plt.gca().xaxis.tick_top()
+plt.xticks(np.arange(25), category_names, rotation=90)
+plt.colorbar(label="Number of partcipants", shrink=0.5)
+plt.subplots_adjust(left=0.2, top=0.8, right=1)
+plt.savefig('../results/figs/categories_cooccurrence')
 plt.close()
