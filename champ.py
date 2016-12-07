@@ -124,7 +124,7 @@ for j in range(0, 15):
 	for i in range(8):
 		plt.axhline(0.5+i, color='w', lw=2)
 	for i in range(8):
-		if positive.ix[j, i] > 0.7:
+		if positive.ix[j, i] > 0.8:
 			textcol ='w'
 		else:
 			textcol = 'k'
