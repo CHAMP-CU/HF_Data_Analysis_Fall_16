@@ -31,12 +31,10 @@ allthree.ix[2] = pd.get_dummies(df.review_hch_rank_03[(operated.sum(1) == 3)]).s
 
 
 (allthree[::-1]/(operated.sum(1) == 3).sum()*100).plot(kind='barh', stacked=True, 
-				width=1, legend=False, figsize=(8, 8))
-plt.legend(ncol=1, framealpha=0.5)
+				width=1, legend=False, figsize=(12, 6))
+plt.legend(ncol=3, framealpha=0.5)
 plt.axis('tight')
 plt.xlabel("%")
-plt.yticks(size='x-large', rotation=90, va='top')
-plt.xticks(size='x-large')
 plt.savefig('../results/figs/hatch_contingiency')
 
 
